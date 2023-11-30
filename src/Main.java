@@ -9,13 +9,13 @@ public class Main {
 
         MainFrame frame = new MainFrame();
 
-        frame.setSize(1080, 720);
+        frame.setSize(1920, 1080);
         Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation((int) (screensize.getWidth() / 2 - frame.getSize().getWidth() / 2),
                 (int) (screensize.getHeight() / 2 - frame.getSize().getHeight() / 2));
         frame.setResizable(false);
         frame.setTitle("Scrabble");
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(1);
+        frame.setDefaultCloseOperation(3);
     }
 }

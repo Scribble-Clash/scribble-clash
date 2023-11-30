@@ -2,27 +2,43 @@ package Views;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import Controllers.KeyChecker;
-import Entity.Player;
-import Entity.Wall;
+import Controllers.*;
+import Entity.*;
 
 public class GamePanel extends javax.swing.JPanel implements Runnable, ActionListener {
     private Player player;
     private Thread gameThread;
+    private WeaponController weaponController;
     public ArrayList<Wall> walls = new ArrayList<>();
+    String groundImagePath = "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\assets\\rumput.png";
+    String wallImagePath = "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\assets\\wall.png";
+    String player1imagepath = "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\assets\\redchara.png";
+    String hand1imagepath = "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\assets\\redhand.png";
 
     public GamePanel() {
-        player = new Player(400, 300, this);
+
+        Image charaimg = Loader.loadImage(player1imagepath);
+        Image handimg = Loader.loadImage(hand1imagepath);
+
+        player = new Player(400, 300, charaimg, handimg, this);
         this.addKeyListener(new KeyChecker(this));
-        makeWalls();
+
+        // menambahkan ground baru
+        Image wallImage = Loader.loadImage(wallImagePath);
+        addwall(wallImage, 50, 2000);
+        Image groundimage = Loader.loadImage(groundImagePath);
+        addground(groundimage, 50, 2000);
 
         gameThread = new Thread(this);
         gameThread.start();
+
     }
 
     @Override
@@ -38,24 +54,19 @@ public class GamePanel extends javax.swing.JPanel implements Runnable, ActionLis
         }
     }
 
-    public void makeWalls() {
-        // Dinding bawah
-        for (int i = 50; i < 1005; i += 50) {
-            walls.add(new Wall(i, 620, 50, 50));
+    public void addground(Image img, int width, int height) {
+        for (int i = 0; i < 1900; i += width) {
+            walls.add(new Wall(i, 1000, img));
         }
-        // Dinding batas kiri
-        for (int i = 0; i <= 650; i += 50) {
-            walls.add(new Wall(0, i, 50, 50));
-        }
+    }
 
-        // Dinding batas kanan
-        for (int i = 0; i <= 650; i += 50) {
-            walls.add(new Wall(1010, i, 50, 50));
+    public void addwall(Image img, int width, int height) {
+        for (int i = 0; i < 1900; i += width) {
+            walls.add(new Wall(0, i, img));
         }
-        walls.add(new Wall(50, 550, 50, 50));
-        walls.add(new Wall(50, 500, 50, 50));
-        walls.add(new Wall(50, 450, 50, 50));
-
+        for (int i = 0; i < 1900; i += width) {
+            walls.add(new Wall(1850, i, img));
+        }
     }
 
     public void paint(Graphics g) {
@@ -96,6 +107,21 @@ public class GamePanel extends javax.swing.JPanel implements Runnable, ActionLis
         if (e.getKeyChar() == 'd') {
             player.keyRight = false;
         }
+    }
+
+    public void handleMouseInput(int mouseX, int mouseY) {
+        // Mendapatkan posisi tangan pemain
+        Point handPosition = player.getHandPosition();
+
+        // Menghitung sudut rotasi
+        double angle = Math.atan2(mouseY - handPosition.y, mouseX - handPosition.x);
+        int rotationAngle = (int) Math.toDegrees(angle);
+
+        // Mengatur orientasi senjata
+        player.getHand().setOrientation(rotationAngle);
+
+        // Menggerakkan senjata lain jika ada
+        weaponController.moveOtherWeapons(rotationAngle);
     }
 
     @Override
