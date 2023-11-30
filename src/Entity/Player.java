@@ -31,12 +31,12 @@ public class Player {
     }
 
     public void set() {
-        if (keyLeft && keyRight || !keyLeft && !keyRight) {
+        if (keyLeft && !keyRight) {
+            xspeed -= 1.0;
+        } else if (!keyLeft && keyRight) {
+            xspeed += 1.0;
+        } else {
             xspeed *= 0.8;
-        } else if (keyLeft && !keyRight) {
-            xspeed--;
-        } else if (keyRight && !keyLeft) {
-            xspeed++;
         }
 
         if (xspeed > 0 && xspeed < 0.75) {
@@ -54,40 +54,50 @@ public class Player {
 
         if (keyUp) {
             // checkif touching Ground
-            hitbox.y++;
+            // hitbox.y++;
             for (Wall wall : panel.walls) {
                 if (wall.hitbox.intersects(hitbox)) {
-                    yspeed = -6;
+                    yspeed = -10;
+
                 }
-                hitbox.y--;
+                // hitbox.y--
+
             }
         }
 
-        // horizontal collisions
+        // Tembok collisions
         hitbox.x += xspeed;
+        // for (Wall wall : panel.walls) {
+        // if (hitbox.intersects(wall.hitbox)) {
+        // // if (xspeed > 0) {
+        // // // Pemain bergerak ke kanan, atur pemain ke posisi sebelum bersentuhan
+        // dengan
+        // // // dinding
+        // // hitbox.x = wall.hitbox.x - hitbox.width;
+        // // } else if (xspeed < 0) {
+        // // // Pemain bergerak ke kiri, atur pemain ke posisi sebelum bersentuhan
+        // dengan
+        // // // dinding
+        // // hitbox.x = wall.hitbox.x + wall.hitbox.width;
+        // // }
+        // // xspeed = 0; // Hentikan pergerakan horizontal
+        // x = hitbox.x;
+        // }
+        // }
+
+        boolean onGround = false; // Menandakan apakah pemain berada di tanah atau tidak
+        hitbox.y++;
         for (Wall wall : panel.walls) {
-            if (hitbox.intersects(wall.hitbox)) {
-                hitbox.x -= xspeed;
-                while (!wall.hitbox.intersects(hitbox)) {
-                    hitbox.x += Math.signum(xspeed);
-                }
-                hitbox.x -= Math.signum(xspeed);
-                xspeed = 0;
-                x = hitbox.x;
+            if (wall.hitbox.intersects(hitbox)) {
+                onGround = true;
+                yspeed = 0;
+                y = wall.hitbox.y - height;
             }
         }
-        // vertical collisions
-        hitbox.y += yspeed;
-        for (Wall wall : panel.walls) {
-            if (hitbox.intersects(wall.hitbox)) {
-                hitbox.y -= yspeed;
-                while (!wall.hitbox.intersects(hitbox)) {
-                    hitbox.y += Math.signum(yspeed);
-                }
-                hitbox.y -= Math.signum(yspeed);
-                yspeed = 0;
-                y = hitbox.y;
-            }
+        hitbox.y--;
+
+        if (onGround && keyUp) {
+            yspeed = -10; // Ganti 6 dengan 10 untuk melompat lebih tinggi
         }
 
         yspeed += 0.3;
