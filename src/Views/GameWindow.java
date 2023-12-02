@@ -1,14 +1,15 @@
-package Views;
+package views;
 
 import java.awt.Color;
 
 import javax.swing.JFrame;
 
-import Controllers.KeyChecker;
+import controller.KeyChecker;
 
-public class MainFrame extends JFrame {
-    public MainFrame() {
+public class GameWindow extends JFrame {
+    public GameWindow() {
         GamePanel gPanel = new GamePanel();
+
         gPanel.setLocation(0, 0);
         gPanel.setSize(this.getSize());
         gPanel.setBackground(Color.lightGray);

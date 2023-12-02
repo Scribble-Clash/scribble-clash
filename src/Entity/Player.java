@@ -1,107 +1,102 @@
-package Entity;
+package entity;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.*;
 
-import Controllers.Loader;
-import Entity.Weapon.*;
-import Views.GamePanel;
+import views.GamePanel;
 
-public class Player {
-    GamePanel panel;
-    int x, y;
-    int width, height;
-    double xspeed;
-    double yspeed;
-
+public class Player extends Entity {
     public boolean keyLeft;
     public boolean keyRight;
     public boolean keyDown;
     public boolean keyUp;
-
-    Image playerImage;
-    Rectangle hitbox;
+    private int health;
+    private int maxHealth;
+    private Image healthBarImg;
+    private Image originalImg;
     private Hand hand;
     private Rectangle handHitbox;
-    String wea = "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\assets\\sword.png";
+    private boolean facingLeft;
 
-    public Player(int x, int y, Image playerImage, Image handImage, GamePanel panel) {
+    public Player(int x, int y, Image img, Image handImage, GamePanel panel) {
+        super(x, y);
         this.panel = panel;
-        this.x = x;
-        this.y = y;
+        this.img = img;
+        width = img.getWidth(panel);
+        height = img.getHeight(panel);
+        this.hitbox = new Rectangle(x, y, width, height);
 
-        this.playerImage = playerImage;
-        width = playerImage.getWidth(panel);
-        height = playerImage.getHeight(panel);
-        hitbox = new Rectangle(x, y, width, height);
-
-        hand = new Hand(x + width / 2, y + height / 2, handImage);
+        hand = new Hand(x + width, y + height, handImage);
         handHitbox = new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
-        Image weaponImage = Loader.loadImage(wea);
 
-        Sword weapon = new Sword(0, 0, weaponImage); // Membuat objek Weapon (misalnya)
-        hand.holdWeapon(weapon); //
+        this.healthBarImg = healthBarImg;
+        this.maxHealth = 100;
+        this.health = maxHealth;
+        this.originalImg = img;
     }
 
+    public void reduceHealth(int amount) {
+        health -= amount;
+        if (health <= 0) {
+
+        }
+    }
+
+    @Override
     public void set() {
         if (keyLeft && !keyRight) {
-            xspeed -= 1.0;
+            xspeed -= 0.5;
+            // facingLeft = true;
         } else if (!keyLeft && keyRight) {
-            xspeed += 1.0;
+            // facingLeft = false;
+            xspeed += 0.5;
         } else {
-            xspeed *= 0.8;
+            xspeed *= 0.6;
         }
 
-        if (xspeed > 0 && xspeed < 0.75) {
+        if (xspeed > 0 && xspeed < 0.5) {
             xspeed = 0;
         }
-        if (xspeed < 0 && xspeed > -0.75) {
+        if (xspeed < 0 && xspeed > -0.5) {
             xspeed = 0;
         }
-        if (xspeed > 7) {
-            xspeed = 7;
+        if (xspeed > 5) {
+            xspeed = 5;
         }
-        if (xspeed < -7) {
-            xspeed = -7;
+        if (xspeed < -5) {
+            xspeed = -5;
         }
-
+        if (xspeed < 0) {
+            img = flipImageHorizontally(originalImg);
+        } else if (xspeed > 0) {
+            img = originalImg;
+        }
         if (keyUp) {
-            // checkif touching Ground
             hitbox.y++;
             for (Wall wall : panel.walls) {
                 if (wall.hitbox.intersects(hitbox)) {
-                    yspeed = -10;
-
+                    yspeed = -6;
                 }
             }
             hitbox.y--;
 
         }
-
         // Tembok collisions
         hitbox.x += xspeed;
         for (Wall wall : panel.walls) {
             if (hitbox.intersects(wall.hitbox)) {
                 if (xspeed > 0) {
-                    // Pemain bergerak ke kanan, atur pemain ke posisi sebelum bersentuhan
-                    // dengan
-                    // dinding
+
                     hitbox.x = wall.hitbox.x - hitbox.width;
                 } else if (xspeed < 0) {
-                    // Pemain bergerak ke kiri, atur pemain ke posisi sebelum bersentuhan
-                    // dengan
-                    // dinding
                     hitbox.x = wall.hitbox.x + wall.hitbox.width;
                 }
-                // Hentikan pergerakan horizontal
                 xspeed = 0;
                 x = hitbox.x;
             }
         }
-
-        boolean onGround = false; // Menandakan apakah pemain berada di tanah atau tidak
+        boolean onGround = false;
         hitbox.y++;
         for (Wall wall : panel.walls) {
             if (wall.hitbox.intersects(hitbox)) {
@@ -112,34 +107,52 @@ public class Player {
         }
         hitbox.y--;
 
-        if (onGround && keyUp) {
-            yspeed = -10; // Ganti 6 dengan 10 untuk melompat lebih tinggi
+        // Penanganan saat di atas tanah
+        if (onGround) {
+            if (keyUp) {
+                yspeed = -6;
+            } else {
+                yspeed = 0;
+            }
+        } else {
+            yspeed += 0.3;
         }
 
-        yspeed += 0.3;
+        // Pembaruan posisi
         x += xspeed;
         y += yspeed;
 
-        // Update posisi hitbox pemain dan tangan
         hitbox.x = x;
         hitbox.y = y;
-        hand.updatePosition(x + width / 2, y + height / 2); // Memperbarui posisi tangan
-        handHitbox.setBounds(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight()); // Memperbarui hitbox tangan
+
+    }
+
+    private Image flipImageHorizontally(Image img) {
+        BufferedImage bufferedImage = (BufferedImage) img;
+        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+        tx.translate(-bufferedImage.getWidth(null), 0);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        return op.filter(bufferedImage, null);
     }
 
     public Hand getHand() {
         return hand;
     }
 
-    public Point getHandPosition() {
-        int handX = this.x + this.width / 2;
-        int handY = this.y + this.height / 2;
-
-        return new Point(handX, handY);
-    }
-
+    @Override
     public void draw(Graphics2D gtd) {
-        gtd.drawImage(playerImage, x, y, width, height, panel);
+        gtd.drawImage(img, x, y, width, height, panel);
         hand.draw(gtd);
+
+        // if (facingLeft) {
+        // hand.updatePosition(x + width / 2 - 60, y + height / 2);
+        // } else {
+        // hand.updatePosition(x + width / 2, y + height / 2);
+        // }
+
+        // if (xspeed == 0 && facingLeft) {
+        // hand.updatePosition(x + width / 2 - 60, y + height / 2);
+        // }
     }
+
 }

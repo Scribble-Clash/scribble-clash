@@ -1,24 +1,22 @@
-package Entity;
+package entity;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.*;
 
-public class Wall {
-    private int x, y;
-    private Image image;
-    public Rectangle hitbox; // Ganti hitbox dengan Rectangle yang sesuai dengan gambar
+public class Wall extends Entity {
+    public Rectangle hitbox;
+    Image img;
 
-    public Wall(int x, int y, Image image) {
-        this.x = x;
-        this.y = y;
-        this.image = image;
+    public Wall(int x, int y, Image img) {
+        super(x, y);
+        this.img = img;
+        this.hitbox = new Rectangle(x, y, img.getWidth(null) - 11, img.getHeight(null));
+    }
 
-        // Buat hitbox dengan ukuran sesuai dengan gambar
-        this.hitbox = new Rectangle(x, y, image.getWidth(null), image.getHeight(null));
+    @Override
+    public void set() {
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(image, x, y, null); // Gambar gambar wall di sini
+        g2d.drawImage(img, x, y, null);
     }
 }

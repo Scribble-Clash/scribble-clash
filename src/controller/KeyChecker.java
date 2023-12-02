@@ -1,9 +1,9 @@
-package Controllers;
+package controller;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import Views.GamePanel;
+import views.GamePanel;
 
 public class KeyChecker extends KeyAdapter {
     GamePanel panel;
