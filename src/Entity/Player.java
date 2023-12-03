@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 
+import entity.Weapon.*;
 import views.GamePanel;
 
 public class Player extends Entity {
@@ -12,12 +13,11 @@ public class Player extends Entity {
     public boolean keyDown;
     public boolean keyUp;
     private int health;
-    private int maxHealth;
-    private Image healthBarImg;
+    // private int maxHealth;
+    // private Image healthBarImg;
     private Image originalImg;
     private Hand hand;
-    private Rectangle handHitbox;
-    private boolean facingLeft;
+    private Weapon heldWeapon;
 
     public Player(int x, int y, Image img, Image handImage, GamePanel panel) {
         super(x, y);
@@ -26,14 +26,15 @@ public class Player extends Entity {
         width = img.getWidth(panel);
         height = img.getHeight(panel);
         this.hitbox = new Rectangle(x, y, width, height);
+        this.originalImg = img;
 
         hand = new Hand(x + width, y + height, handImage);
-        handHitbox = new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
+        new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
+        heldWeapon = new Sword(x + width, y + height, 10, this.panel);
 
-        this.healthBarImg = healthBarImg;
-        this.maxHealth = 100;
-        this.health = maxHealth;
-        this.originalImg = img;
+        // this.healthBarImg = healthBarImg;
+        // this.maxHealth = 100;
+        // this.health = maxHealth;
     }
 
     public void reduceHealth(int amount) {
@@ -41,6 +42,10 @@ public class Player extends Entity {
         if (health <= 0) {
 
         }
+    }
+
+    public Weapon getHeldWeapon() {
+        return heldWeapon;
     }
 
     @Override
@@ -127,6 +132,33 @@ public class Player extends Entity {
 
     }
 
+    public void updateHandPosition(int mouseX, int mouseY) {
+        int playerX = getX() + getWidth() / 2;
+        int playerY = getY() + getHeight() / 2;
+
+        int dx = mouseX - playerX;
+        int dy = mouseY - playerY;
+
+        double angleRadians = Math.atan2(dy, dx);
+
+        int maxHandDistanceFromMouse = 30;
+        double distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
+        int newHandDistanceFromCenter = (int) Math.min(distanceToPlayer, maxHandDistanceFromMouse);
+
+        int handX = (int) (playerX + newHandDistanceFromCenter * Math.cos(angleRadians))
+                - getHand().getWidth() / 2;
+        int handY = (int) (playerY + newHandDistanceFromCenter * Math.sin(angleRadians))
+                - getHand().getHeight() / 2;
+
+        int maxX = playerX + getWidth() / 2 - getHand().getWidth() / 2;
+        int maxY = playerY + getHeight() / 2 - getHand().getHeight() / 2;
+
+        handX = Math.min(Math.max(handX, playerX - maxX), playerX + maxX);
+        handY = Math.min(Math.max(handY, playerY - maxY), playerY + maxY);
+
+        getHand().updatePosition(handX, handY);
+    }
+
     private Image flipImageHorizontally(Image img) {
         BufferedImage bufferedImage = (BufferedImage) img;
         AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
@@ -142,6 +174,11 @@ public class Player extends Entity {
     @Override
     public void draw(Graphics2D gtd) {
         gtd.drawImage(img, x, y, width, height, panel);
+
+        if (heldWeapon != null) {
+            heldWeapon.setPosition(hand.getX(), hand.getY());
+            heldWeapon.draw(gtd);
+        }
         hand.draw(gtd);
 
         // if (facingLeft) {

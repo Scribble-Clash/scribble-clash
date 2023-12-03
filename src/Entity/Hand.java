@@ -2,13 +2,14 @@ package entity;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
+import entity.Weapon.Weapon;
 
 public class Hand extends Entity {
     private int x, y;
     private int width, height;
     private Image handImage;
     private int orientation;
+    private Weapon heldWeapon; // Menyimpan referensi ke Weapon yang sedang digunakan
 
     public Hand(int x, int y, Image img) {
         super(x, y);
@@ -18,6 +19,10 @@ public class Hand extends Entity {
     }
 
     public void draw(Graphics2D g2d) {
+        if (heldWeapon != null) {
+            heldWeapon.setPosition(x, y);
+            heldWeapon.draw(g2d);
+        }
         g2d.drawImage(handImage, x, y, width, height, panel);
     }
 
@@ -50,9 +55,12 @@ public class Hand extends Entity {
         return orientation;
     }
 
+    public void setHeldWeapon(Weapon weapon) {
+        this.heldWeapon = weapon;
+    }
+
     @Override
     public void set() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'set'");
+
     }
 }

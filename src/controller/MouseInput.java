@@ -6,6 +6,9 @@ import entity.Player;
 
 public class MouseInput implements MouseListener, MouseMotionListener {
     private Player player;
+    private boolean isMouseInside;
+    private int lastMouseX;
+    private int lastMouseY;
 
     public MouseInput(Player player) {
         this.player = player;
@@ -13,16 +16,65 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         int playerX = player.getX() + player.getWidth() / 2;
         int playerY = player.getY() + player.getHeight() / 2;
 
-        // Atur posisi awal tangan di bawah pusat badan pemain
         int initialHandY = playerY + player.getHeight() / 4;
         player.getHand().updatePosition(playerX - player.getHand().getWidth() / 2, initialHandY);
+
+        isMouseInside = true;
+        lastMouseX = 0;
+        lastMouseY = 0;
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        int mouseX = e.getX();
-        int mouseY = e.getY();
+        if (isMouseInside) {
+            updateHandPosition(e.getX(), e.getY());
+        }
+    }
 
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        if (isMouseInside) {
+            updateHandPosition(e.getX(), e.getY());
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (isMouseInside) {
+            updateHandPosition(e.getX(), e.getY());
+            player.getHeldWeapon().attack();
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (isMouseInside) {
+            updateHandPosition(e.getX(), e.getY());
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (isMouseInside) {
+            updateHandPosition(e.getX(), e.getY());
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        isMouseInside = true;
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        isMouseInside = false;
+        int playerX = player.getX() + player.getWidth() / 2;
+        int playerY = player.getY() + player.getHeight() / 2;
+        int initialHandY = playerY + player.getHeight() / 4;
+        player.getHand().updatePosition(playerX - player.getHand().getWidth() / 2, initialHandY);
+    }
+
+    private void updateHandPosition(int mouseX, int mouseY) {
         int playerX = player.getX() + player.getWidth() / 2;
         int playerY = player.getY() + player.getHeight() / 2;
 
@@ -31,55 +83,40 @@ public class MouseInput implements MouseListener, MouseMotionListener {
 
         double angleRadians = Math.atan2(dy, dx);
 
-        // Batasi jarak tangan terhadap mouse
         int maxHandDistanceFromMouse = 30;
-
-        // Hitung jarak mouse ke pemain
         double distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
-
-        // Hitung jarak tangan ke mouse
         int newHandDistanceFromCenter = (int) Math.min(distanceToPlayer, maxHandDistanceFromMouse);
 
-        // Koordinat tangan relatif terhadap pusat pemain menggunakan trigonometri
         int handX = (int) (playerX + newHandDistanceFromCenter * Math.cos(angleRadians))
                 - player.getHand().getWidth() / 2;
         int handY = (int) (playerY + newHandDistanceFromCenter * Math.sin(angleRadians))
                 - player.getHand().getHeight() / 2;
 
-        // Pastikan tangan tetap berada di sekitar player
         int maxX = playerX + player.getWidth() / 2 - player.getHand().getWidth() / 2;
         int maxY = playerY + player.getHeight() / 2 - player.getHand().getHeight() / 2;
 
         handX = Math.min(Math.max(handX, playerX - maxX), playerX + maxX);
         handY = Math.min(Math.max(handY, playerY - maxY), playerY + maxY);
 
-        // Atur posisi tangan
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+
         player.getHand().updatePosition(handX, handY);
     }
 
-    @Override
-    public void mouseDragged(MouseEvent e) {
+    public int getLastMouseX() {
+        return lastMouseX;
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
+    public int getLastMouseY() {
+        return lastMouseY;
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
+    public Player getPlayer() {
+        return player;
     }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
+    public boolean isMouseInside() {
+        return isMouseInside;
     }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-
-    // Implementasi method lainnya sesuai kebutuhan
 }

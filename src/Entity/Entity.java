@@ -8,7 +8,7 @@ public abstract class Entity {
     protected double xspeed, yspeed;
     protected Image img;
     protected Rectangle hitbox;
-    GamePanel panel;
+    protected GamePanel panel;
 
     public Entity(int x, int y) {
         this.x = x;
@@ -33,6 +33,10 @@ public abstract class Entity {
 
     public Rectangle getHitbox() {
         return hitbox;
+    }
+
+    public GamePanel getPanel() {
+        return panel;
     }
 
     public abstract void set();

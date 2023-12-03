@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
-import controller.KeyChecker;
+import controller.KeyInput;
 
 public class GameWindow extends JFrame {
     public GameWindow() {
@@ -15,7 +15,9 @@ public class GameWindow extends JFrame {
         gPanel.setBackground(Color.lightGray);
         gPanel.setVisible(true);
         this.add(gPanel);
-        addKeyListener(new KeyChecker(gPanel));
+        KeyInput keyChecker = gPanel.getKeyChecker();
+        addKeyListener(keyChecker);
+
     }
 
 }
