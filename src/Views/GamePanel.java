@@ -44,7 +44,6 @@ public class GamePanel extends JPanel implements Runnable {
         Loader load = new Loader();
         BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
         dummyEnemy = new DummyEnemy(700, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
-
         gameThread = new Thread(this);
         gameThread.start();
     }

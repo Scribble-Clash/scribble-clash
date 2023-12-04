@@ -43,7 +43,7 @@ public class Sword extends Weapon {
 
             for (int i = 1; i < totalFrames; i++) {
                 try {
-                    Thread.sleep(150);
+                    Thread.sleep(80);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
