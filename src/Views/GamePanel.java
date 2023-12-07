@@ -18,7 +18,7 @@ import entity.Weapon.Sword;
 import entity.Weapon.Weapon;
 
 public class GamePanel extends JPanel implements Runnable {
-    private Player player; // Mengganti ArrayList<Player> menjadi objek tunggal Player
+    private Player player;
     private PlayerMaker playerMaker;
     private Thread gameThread;
     public ArrayList<Wall> walls = new ArrayList<>();
@@ -52,7 +52,6 @@ public class GamePanel extends JPanel implements Runnable {
         return keychecker;
     }
 
-    // thread yang digunakan menjadi gameloop
     @Override
     public void run() {
         while (true) {
@@ -66,7 +65,7 @@ public class GamePanel extends JPanel implements Runnable {
             checkCollisions();
             repaint();
             try {
-                Thread.sleep(15); // Delay untuk mengatur kecepatan pergerakan
+                Thread.sleep(15);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -74,13 +73,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void checkCollisions() {
-        // Pemeriksaan tabrakan antara senjata pemain dan DummyEnemy
         Weapon heldWeapon = player.getHeldWeapon();
         if (heldWeapon instanceof Sword) {
             Sword sword = (Sword) heldWeapon;
             sword.checkCollision(dummyEnemy);
         }
-        // ... logika lainnya untuk tabrakan dengan objek lain jika diperlukan
     }
 
     public DummyEnemy getDummyEnemy() {

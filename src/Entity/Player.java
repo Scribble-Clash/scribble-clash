@@ -13,6 +13,8 @@ public class Player extends Entity {
     public boolean keyDown;
     public boolean keyUp;
     private int health;
+    protected double xspeed, yspeed;
+
     // private int maxHealth;
     // private Image healthBarImg;
     private Image originalImg;

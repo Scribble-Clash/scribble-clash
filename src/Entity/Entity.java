@@ -5,7 +5,6 @@ import views.GamePanel;
 
 public abstract class Entity {
     protected int width, height, x, y;
-    protected double xspeed, yspeed;
     protected Image img;
     protected Rectangle hitbox;
     protected GamePanel panel;
