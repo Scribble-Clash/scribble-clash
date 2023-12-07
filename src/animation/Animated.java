@@ -1,6 +1,7 @@
 package animation;
 
 import java.awt.image.BufferedImage;
+
 import controller.Loader;
 
 public class Animated {
@@ -16,19 +17,20 @@ public class Animated {
         swingAnimation = new BufferedImage[7];
         // swingAnimation[0] = (BufferedImage) image.getSubimage(448, 0, 64, 64);
         swingAnimation[0] = (BufferedImage) Loader.loadImage(
-                "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\src\\assets\\pedangkanan.png");
+                "src/assets/pedangkanan.png");
+        System.out.println(swingAnimation[0]);
         swingAnimation[1] = (BufferedImage) Loader.loadImage(
-                "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\src\\assets\\slahanimation\\File1.png");
+                "src/assets/slahanimation/File1.png");
         swingAnimation[2] = (BufferedImage) Loader.loadImage(
-                "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\src\\assets\\slahanimation\\File2.png");
+                "src/assets/slahanimation/File2.png");
         swingAnimation[3] = (BufferedImage) Loader.loadImage(
-                "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\src\\assets\\slahanimation\\File3.png");
+                "src/assets/slahanimation/File3.png");
         swingAnimation[4] = (BufferedImage) Loader.loadImage(
-                "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\src\\assets\\slahanimation\\File4.png");
+                "src/assets/slahanimation/File4.png");
         swingAnimation[5] = (BufferedImage) Loader.loadImage(
-                "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\src\\assets\\slahanimation\\File5.png");
+                "src/assets/slahanimation/File5.png");
         swingAnimation[6] = (BufferedImage) Loader.loadImage(
-                "D:\\#Programing\\Project\\Fight-Scribble\\Fight-ScribbleGit\\scribble-fight\\src\\assets\\slahanimation\\File6.png");
+                "src/assets/slahanimation/File6.png");
         return swingAnimation;
     }
 
