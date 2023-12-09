@@ -25,5 +25,8 @@ bin/
 ### VS Code ###
 .vscode/
 
+### GitHub ###
+.github/
+
 ### Mac OS ###
 .DS_Store
