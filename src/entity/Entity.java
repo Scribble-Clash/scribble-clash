@@ -5,7 +5,6 @@ import views.GamePanel;
 
 public abstract class Entity {
     protected int width, height, x, y;
-    protected double xspeed, yspeed;
     protected Image img;
     protected Rectangle hitbox;
     protected GamePanel panel;
@@ -15,6 +14,7 @@ public abstract class Entity {
         this.y = y;
     }
 
+    // setter and getter
     public int getX() {
         return x;
     }
@@ -39,6 +39,7 @@ public abstract class Entity {
         return panel;
     }
 
+    // abstract method
     public abstract void set();
 
     public abstract void draw(Graphics2D gtd);

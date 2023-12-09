@@ -16,6 +16,7 @@ public class Arrow extends Entity {
         this.shot = false;
     }
 
+    // overide method
     @Override
     public void set() {
     }
@@ -27,6 +28,7 @@ public class Arrow extends Entity {
         }
     }
 
+    // other method
     public void shoot(int bowX, int bowY) {
 
         this.x = bowX;

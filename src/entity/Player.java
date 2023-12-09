@@ -13,11 +13,16 @@ public class Player extends Entity {
     public boolean keyDown;
     public boolean keyUp;
     private int health;
+    protected double xspeed, yspeed;
+
     // private int maxHealth;
     // private Image healthBarImg;
     private Image originalImg;
     private Hand hand;
     private Weapon heldWeapon;
+    private boolean facingLeft;
+    boolean isDashLeft = false;
+    boolean isDashRight = false;
 
     public Player(int x, int y, Image img, Image handImage, GamePanel panel) {
         super(x, y);
@@ -28,33 +33,76 @@ public class Player extends Entity {
         this.hitbox = new Rectangle(x, y, width, height);
         this.originalImg = img;
 
-        hand = new Hand(x + width, y + height, handImage);
+        hand = new Hand(x + width, y + height, handImage, this.panel);
         new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
-        heldWeapon = new Sword(x + width, y + height, 10, this.panel);
+        // heldWeapon = new Sword(x + width, y + height, 10, this.panel);
 
         // this.healthBarImg = healthBarImg;
         // this.maxHealth = 100;
         // this.health = maxHealth;
     }
 
-    public void reduceHealth(int amount) {
-        health -= amount;
-        if (health <= 0) {
+    // setter and getter
+    public void setDashLeft(boolean isDashLeft) {
+        this.isDashLeft = isDashLeft;
+    }
 
-        }
+    public void setDashRight(boolean isDashRight) {
+        this.isDashRight = isDashRight;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public Hand getHand() {
+        return hand;
     }
 
     public Weapon getHeldWeapon() {
         return heldWeapon;
     }
 
+    public boolean isFacingLeft() {
+        return facingLeft;
+    }
+
+    // overide method
     @Override
     public void set() {
+        int dashDistance = 60;
+        boolean canDash = true;
+        if (isDashLeft) {
+            for (Wall wall : panel.walls) {
+                Rectangle nextX = new Rectangle(x - dashDistance, y, width, height);
+                if (nextX.intersects(wall.hitbox)) {
+                    canDash = false;
+                    break;
+                }
+            }
+            if (canDash) {
+                x -= dashDistance;
+            }
+        } else if (isDashRight) {
+            for (Wall wall : panel.walls) {
+                Rectangle nextX = new Rectangle(x + dashDistance, y, width, height);
+                if (nextX.intersects(wall.hitbox)) {
+                    canDash = false;
+                    break;
+                }
+            }
+            if (canDash) {
+                x += dashDistance;
+            }
+        }
+        isDashLeft = false;
+        isDashRight = false;
+
         if (keyLeft && !keyRight) {
             xspeed -= 0.5;
-            // facingLeft = true;
+            facingLeft = true;
         } else if (!keyLeft && keyRight) {
-            // facingLeft = false;
+            facingLeft = false;
             xspeed += 0.5;
         } else {
             xspeed *= 0.6;
@@ -132,6 +180,30 @@ public class Player extends Entity {
 
     }
 
+    @Override
+    public void draw(Graphics2D gtd) {
+        gtd.drawImage(img, x, y, width, height, panel);
+
+        if (heldWeapon != null) {
+            heldWeapon.setPosition(hand.getX(), hand.getY());
+            heldWeapon.draw(gtd);
+        }
+        hand.draw(gtd);
+    }
+
+    // other method
+    public void reduceHealth(int amount) {
+        health -= amount;
+        if (health <= 0) {
+
+        }
+    }
+
+    public void updatePosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public void updateHandPosition(int mouseX, int mouseY) {
         int playerX = getX() + getWidth() / 2;
         int playerY = getY() + getHeight() / 2;
@@ -165,31 +237,6 @@ public class Player extends Entity {
         tx.translate(-bufferedImage.getWidth(null), 0);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         return op.filter(bufferedImage, null);
-    }
-
-    public Hand getHand() {
-        return hand;
-    }
-
-    @Override
-    public void draw(Graphics2D gtd) {
-        gtd.drawImage(img, x, y, width, height, panel);
-
-        if (heldWeapon != null) {
-            heldWeapon.setPosition(hand.getX(), hand.getY());
-            heldWeapon.draw(gtd);
-        }
-        hand.draw(gtd);
-
-        // if (facingLeft) {
-        // hand.updatePosition(x + width / 2 - 60, y + height / 2);
-        // } else {
-        // hand.updatePosition(x + width / 2, y + height / 2);
-        // }
-
-        // if (xspeed == 0 && facingLeft) {
-        // hand.updatePosition(x + width / 2 - 60, y + height / 2);
-        // }
     }
 
 }

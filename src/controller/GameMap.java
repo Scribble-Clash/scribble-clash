@@ -16,19 +16,35 @@ public class GameMap {
 
     }
 
+    public ArrayList<Wall> getWalls() {
+        return walls;
+    }
+
     public void testMap() {
         image = (BufferedImage) loadimg.mainimage();
         Image groundImage = image.getSubimage(192, 450, 64, 64);
         Image wallImage = image.getSubimage(320, 321, 64, 64);
 
-        for (int i = 0; i < 1600; i += 60) {
-            walls.add(new Wall(i, 900, groundImage));
+        for (int i = 400; i < 1540; i += 60) {
+            walls.add(new Wall(i, 960, groundImage));
         }
-        for (int i = 840; i > 200; i -= 60) {
-            walls.add(new Wall(0, i, wallImage));
+        for (int i = 900; i > 700; i -= 60) {
+            walls.add(new Wall(400, i, wallImage));
         }
-        for (int i = 840; i > 200; i -= 60) {
-            walls.add(new Wall(1520, i, wallImage));
+        for (int i = 900; i > 700; i -= 60) {
+            walls.add(new Wall(1470, i, wallImage));
+        }
+        walls.add(new Wall(600, 900, wallImage));
+        walls.add(new Wall(1260, 900, wallImage));
+        walls.add(new Wall(1200, 900, wallImage));
+        walls.add(new Wall(460, 780, wallImage));
+        walls.add(new Wall(1410, 780, wallImage));
+
+        for (int i = 900; i > 850; i -= 60) {
+            walls.add(new Wall(660, i, wallImage));
+        }
+        for (int i = 660; i < 1260; i += 60) {
+            walls.add(new Wall(i, 840, wallImage));
         }
     }
 
@@ -46,8 +62,6 @@ public class GameMap {
     // }
     // }
 
-    public ArrayList<Wall> getWalls() {
-        return walls;
-    }
+    // tambah map baru di bawah
 
 }

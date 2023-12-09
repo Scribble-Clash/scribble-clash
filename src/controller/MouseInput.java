@@ -3,12 +3,14 @@ package controller;
 import java.awt.event.*;
 
 import entity.Player;
+import entity.Weapon.Sword;
 
 public class MouseInput implements MouseListener, MouseMotionListener {
     private Player player;
     private boolean isMouseInside;
     private int lastMouseX;
     private int lastMouseY;
+    long pressTime;
 
     public MouseInput(Player player) {
         this.player = player;
@@ -24,6 +26,24 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         lastMouseY = 0;
     }
 
+    // setter and getter
+    public int getLastMouseX() {
+        return lastMouseX;
+    }
+
+    public int getLastMouseY() {
+        return lastMouseY;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public boolean isMouseInside() {
+        return isMouseInside;
+    }
+
+    // Overide Method
     @Override
     public void mouseMoved(MouseEvent e) {
         if (isMouseInside) {
@@ -38,25 +58,56 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         }
     }
 
-    @Override
     public void mouseClicked(MouseEvent e) {
         if (isMouseInside) {
-            updateHandPosition(e.getX(), e.getY());
-            player.getHeldWeapon().attack();
+            if (player.getHeldWeapon() == null) {
+                player.getHand().attack();
+                updateHandPosition(e.getX(), e.getY());
+            } else {
+                updateHandPosition(e.getX(), e.getY());
+                player.getHeldWeapon().attack();
+            }
         }
     }
 
-    @Override
     public void mousePressed(MouseEvent e) {
         if (isMouseInside) {
-            updateHandPosition(e.getX(), e.getY());
+            // Jika penahanan terjadi, mulai hitung durasi
+            pressTime = System.currentTimeMillis(); // Start tracking press time
+            System.out.println("Awal Hold");
         }
     }
 
-    @Override
     public void mouseReleased(MouseEvent e) {
         if (isMouseInside) {
+            long releaseTime = System.currentTimeMillis();
+            long holdDuration = releaseTime - pressTime;
             updateHandPosition(e.getX(), e.getY());
+
+            if (player.getHeldWeapon() == null) {
+                if (holdDuration >= 3000) {
+                    player.getHand().specialattack();
+                    System.out.println("Akhir Hold 3 dtk");
+                } else if (holdDuration >= 1500) {
+                    player.getHand().attack();
+                    System.out.println("Akhir Hold 1.5 dtk");
+                } else {
+                    System.out.println("Charge Gagal");
+                }
+            } else if (player.getHeldWeapon() instanceof Sword) {
+                Sword sword = (Sword) player.getHeldWeapon();
+
+                if (holdDuration >= 5000) {
+                    sword.specialattack();
+                    System.out.println("Sword Special Attack 5 dtk");
+
+                } else if (holdDuration >= 2000) {
+                    sword.specialattack();
+                    System.out.println("Sword Special Attack 2 dtk");
+                } else {
+                    System.out.println("Sword Charge Gagal");
+                }
+            }
         }
     }
 
@@ -74,6 +125,7 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         player.getHand().updatePosition(playerX - player.getHand().getWidth() / 2, initialHandY);
     }
 
+    // other method
     private void updateHandPosition(int mouseX, int mouseY) {
         int playerX = player.getX() + player.getWidth() / 2;
         int playerY = player.getY() + player.getHeight() / 2;
@@ -104,19 +156,4 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         player.getHand().updatePosition(handX, handY);
     }
 
-    public int getLastMouseX() {
-        return lastMouseX;
-    }
-
-    public int getLastMouseY() {
-        return lastMouseY;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public boolean isMouseInside() {
-        return isMouseInside;
-    }
 }

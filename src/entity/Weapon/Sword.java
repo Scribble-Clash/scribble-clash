@@ -13,28 +13,30 @@ public class Sword extends Weapon {
     private int totalFrames;
     private int damage;
     private boolean isAttacking = false;
+    BufferedImage image;
+    Loader load = new Loader();
 
     public Sword(int x, int y, int damage, GamePanel panel) {
         super(x, y);
         this.panel = panel;
-        this.img = (BufferedImage) Loader.loadImage("src\\assets\\pedangkanan.png");
-        this.hitbox = new Rectangle(x, y, img.getWidth(this.getPanel()), img.getHeight(this.getPanel()));
+        image = (BufferedImage) load.mainimage();
+        this.img = image.getSubimage(448, 0, 64, 64); // Make sure img is properly assigned
+        this.hitbox = new Rectangle(x, y, this.img.getWidth(this.getPanel()), this.img.getHeight(this.getPanel()));
         Animated animated = new Animated();
         swingAnimation = animated.swingAnimation();
-        this.damage = damage; // Inisialisasi damage dari pedang
+        this.damage = damage;
     }
 
-    public void checkCollision(DummyEnemy enemy) {
-        Rectangle swordRect = new Rectangle(x, y, img.getWidth(null), img.getHeight(null));
-        Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
-
-        if (swordRect.intersects(enemyRect) && isAttacking) {
-            boolean knockFromRight = panel.getPlayer().getX() > enemy.getX();
-            enemy.takeDamage(damage, knockFromRight);
-            isAttacking = false;
-        }
+    // setter and getter
+    private DummyEnemy getDummyEnemyReference() {
+        return this.getPanel().getDummyEnemy();
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
+    // overide method
     @Override
     public void attack() {
         totalFrames = swingAnimation.length;
@@ -49,7 +51,7 @@ public class Sword extends Weapon {
                 }
                 img = swingAnimation[i];
 
-                checkCollision(getDummyEnemyReference());
+                hit(getDummyEnemyReference(), this.damage);
             }
             img = swingAnimation[0];
             resetHitbox();
@@ -57,22 +59,18 @@ public class Sword extends Weapon {
         animationThread.start();
     }
 
-    private DummyEnemy getDummyEnemyReference() {
-        return this.getPanel().getDummyEnemy();
-    }
-
     private void resetHitbox() {
-        this.hitbox = new Rectangle(x, y, img.getWidth(this.getPanel()), img.getHeight(this.getPanel()));
+        this.hitbox = new Rectangle(x, y, this.img.getWidth(this.getPanel()), this.img.getHeight(this.getPanel()));
     }
 
     @Override
     public void setPosition(int handX, int handY) {
         // posisi saat pedang hadap atwas
-        // this.x = handX;
-        // this.y = handY - 20;
+        this.x = handX;
+        this.y = handY - 20;
         // // posisis saat pedang hadap kanan
-        this.x = handX + 20;
-        this.y = handY;
+        // this.x = handX + 20;
+        // this.y = handY;
         // // posisis saat pedang hadap bawah
         // this.x = handX;
         // this.y = handY + 20;
@@ -83,7 +81,20 @@ public class Sword extends Weapon {
     }
 
     @Override
-    public void hit() {
+    public void hit(DummyEnemy enemy, int damage) {
+        Rectangle swordRect = new Rectangle(x, y, img.getWidth(null), img.getHeight(null));
+        Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+
+        if (swordRect.intersects(enemyRect) && isAttacking) {
+            boolean knockFromRight = panel.getPlayer().getX() > enemy.getX();
+            enemy.takeDamage(damage, knockFromRight);
+            isAttacking = false;
+        }
+    }
+
+    @Override
+    public void specialattack() {
+
     }
 
 }

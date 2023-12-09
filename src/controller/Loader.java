@@ -30,14 +30,4 @@ public class Loader {
         }
         return image;
     }
-
-    public Image mirorimage() {
-        InputStream is = getClass().getResourceAsStream("../assets/mirrorring.png");
-        try {
-            image = ImageIO.read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
-    }
 }
