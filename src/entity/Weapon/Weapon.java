@@ -2,6 +2,7 @@ package entity.Weapon;
 
 import java.awt.*;
 
+import entity.DummyEnemy;
 import entity.Entity;
 
 public abstract class Weapon extends Entity {
@@ -22,7 +23,7 @@ public abstract class Weapon extends Entity {
     // abstract method
     public abstract void setPosition(int x, int y);
 
-    public abstract void hit();
+    public abstract void hit(DummyEnemy enemy, int damage);
 
     public abstract void attack();
 

@@ -61,8 +61,8 @@ public class MouseInput implements MouseListener, MouseMotionListener {
     public void mouseClicked(MouseEvent e) {
         if (isMouseInside) {
             if (player.getHeldWeapon() == null) {
-                updateHandPosition(e.getX(), e.getY());
                 player.getHand().attack();
+                updateHandPosition(e.getX(), e.getY());
             } else {
                 updateHandPosition(e.getX(), e.getY());
                 player.getHeldWeapon().attack();
@@ -88,9 +88,8 @@ public class MouseInput implements MouseListener, MouseMotionListener {
                 if (holdDuration >= 3000) {
                     player.getHand().specialattack();
                     System.out.println("Akhir Hold 3 dtk");
-
                 } else if (holdDuration >= 1500) {
-                    player.getHand().specialattack();
+                    player.getHand().attack();
                     System.out.println("Akhir Hold 1.5 dtk");
                 } else {
                     System.out.println("Charge Gagal");

@@ -46,9 +46,9 @@ public class DummyEnemy extends Entity {
         ySpeed += 0.5;
         y += ySpeed;
 
-        if (x <= 50) {
+        if (x <= 650) {
             moveLeft = false;
-        } else if (x >= 600) {
+        } else if (x >= 1200) {
             moveLeft = true;
         }
 

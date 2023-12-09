@@ -32,6 +32,10 @@ public class Sword extends Weapon {
         return this.getPanel().getDummyEnemy();
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
     // overide method
     @Override
     public void attack() {
@@ -47,7 +51,7 @@ public class Sword extends Weapon {
                 }
                 img = swingAnimation[i];
 
-                checkCollision(getDummyEnemyReference());
+                hit(getDummyEnemyReference(), this.damage);
             }
             img = swingAnimation[0];
             resetHitbox();
@@ -77,15 +81,7 @@ public class Sword extends Weapon {
     }
 
     @Override
-    public void specialattack() {
-
-    }
-
-    @Override
-    public void hit() {
-    }
-
-    public void checkCollision(DummyEnemy enemy) {
+    public void hit(DummyEnemy enemy, int damage) {
         Rectangle swordRect = new Rectangle(x, y, img.getWidth(null), img.getHeight(null));
         Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
 
@@ -95,4 +91,10 @@ public class Sword extends Weapon {
             isAttacking = false;
         }
     }
+
+    @Override
+    public void specialattack() {
+
+    }
+
 }

@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public GamePanel() {
         playerMaker = new PlayerMaker();
-        player = playerMaker.createPlayer(400, 700, this);
+        player = playerMaker.createPlayer(500, 900, this);
 
         keychecker = new KeyInput(player);
         addKeyListener(keychecker);
@@ -43,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         Loader load = new Loader();
         BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
-        dummyEnemy = new DummyEnemy(700, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
+        dummyEnemy = new DummyEnemy(900, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -62,21 +62,12 @@ public class GamePanel extends JPanel implements Runnable {
             } else {
                 player.updateHandPosition(mouseInput.getLastMouseX(), mouseInput.getLastMouseY());
             }
-            checkCollisions();
             repaint();
             try {
                 Thread.sleep(15);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
-        }
-    }
-
-    private void checkCollisions() {
-        Weapon heldWeapon = player.getHeldWeapon();
-        if (heldWeapon instanceof Sword) {
-            Sword sword = (Sword) heldWeapon;
-            sword.checkCollision(dummyEnemy);
         }
     }
 

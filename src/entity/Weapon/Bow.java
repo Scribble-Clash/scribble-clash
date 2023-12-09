@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import controller.Loader;
+import entity.DummyEnemy;
 
 public class Bow extends Weapon {
     BufferedImage image;
@@ -25,7 +26,8 @@ public class Bow extends Weapon {
 
     // overide method
     @Override
-    public void hit() {
+    public void hit(DummyEnemy enemy, int damage) {
+        throw new UnsupportedOperationException("Unimplemented method 'hit'");
     }
 
     @Override
@@ -37,4 +39,5 @@ public class Bow extends Weapon {
     public void specialattack() {
 
     }
+
 }

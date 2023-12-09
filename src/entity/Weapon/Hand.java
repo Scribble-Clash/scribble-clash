@@ -15,11 +15,11 @@ public class Hand extends Weapon {
     private Image handImage;
     private int orientation;
     private Weapon heldWeapon;
-    private BufferedImage[] handfightanimation;
+    private BufferedImage[] animation;
     private int totalFrames;
     private boolean isAttacking = false;
-    private boolean isSpecialAttack = false;
-    private long startTime = 0;
+    private int dashDistance = 20;
+    Animated animated = new Animated();
 
     public Hand(int x, int y, Image img, GamePanel panel) {
         super(x, y);
@@ -28,8 +28,6 @@ public class Hand extends Weapon {
         width = handImage.getWidth(null);
         height = handImage.getHeight(null);
         this.hitbox = new Rectangle(x, y, img.getWidth(this.getPanel()), img.getHeight(this.getPanel()));
-        Animated animated = new Animated();
-        this.handfightanimation = animated.handfightanimation();
     }
 
     // setter and getter
@@ -61,6 +59,10 @@ public class Hand extends Weapon {
         this.heldWeapon = weapon;
     }
 
+    public int getDashDistance() {
+        return dashDistance;
+    }
+
     // override method
     public void draw(Graphics2D g2d) {
         if (heldWeapon != null) {
@@ -81,12 +83,25 @@ public class Hand extends Weapon {
     }
 
     @Override
-    public void hit() {
+    public void hit(DummyEnemy enemy, int damage) {
+        Rectangle swordRect = new Rectangle(x, y, handImage.getWidth(null), handImage.getHeight(null));
+        Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+
+        if (swordRect.intersects(enemyRect) && isAttacking) {
+            boolean knockFromRight = panel.getPlayer().getX() > enemy.getX();
+            enemy.takeDamage(damage, knockFromRight);
+            if (panel.getPlayer().isFacingLeft()) {
+                handImage = animated.flipImageHorizontally((BufferedImage) handImage);
+            }
+
+            isAttacking = false;
+        }
     }
 
     @Override
     public void attack() {
-        totalFrames = handfightanimation.length;
+        this.animation = animated.handfightanimation();
+        totalFrames = animation.length;
         isAttacking = true;
 
         Thread animationThread = new Thread(() -> {
@@ -96,12 +111,12 @@ public class Hand extends Weapon {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                handImage = handfightanimation[i];
+                handImage = animation[i];
                 panel.repaint();
 
-                checkCollision(getDummyEnemyReference(), 1);
+                hit(getDummyEnemyReference(), 1);
             }
-            handImage = handfightanimation[0];
+            handImage = animation[0];
             isAttacking = false;
             resetHitbox();
             panel.repaint();
@@ -109,70 +124,43 @@ public class Hand extends Weapon {
         animationThread.start();
     }
 
+    @Override
     public void specialattack() {
-        if (isSpecialAttack) {
-            int newAttackDamage = 5; // Damage for special attack
-            int forwardMovement = 10; // Adjust forward movement pixels
+        this.animation = animated.specialhandfightanimation();
+        isAttacking = true;
+        totalFrames = animation.length;
+        if (panel.getPlayer().isFacingLeft()) { // Menghadap kiri
+            panel.getPlayer().setDashLeft(true);
+        } else { // Menghadap kanan
+            panel.getPlayer().setDashRight(true);
+        }
+        Thread animationThread = new Thread(() -> {
+            // Animasi serangan khusus
+            for (int i = 0; i < totalFrames; i++) {
+                try {
+                    Thread.sleep(80);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                handImage = animation[i];
+                panel.repaint();
 
-            int playerX = panel.getPlayer().getX(); // Get player X position
-            int playerY = panel.getPlayer().getY(); // Get player Y position
-
-            // Update position for special attack (move forward)
-            int newX = playerX + forwardMovement; // Change X position
-            int newY = playerY; // Change Y position accordingly
-
-            // Update position
-            getPanel().getPlayer().updatePosition(newX, newY);
-            DummyEnemy enemy = getDummyEnemyReference();
-            if (enemy != null) {
-                checkCollision(enemy, newAttackDamage);
+                hit(getDummyEnemyReference(), 1);
             }
+            handImage = animation[0];
 
+            isAttacking = false;
             resetHitbox();
             panel.repaint();
-        }
-    }
-
-    public void triggerSpecialAttack() {
-        Thread specialAttackThread = new Thread(() -> {
-            try {
-                startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 5000) { // Change duration as needed
-                    if (System.currentTimeMillis() - startTime >= 2000) { // Check for special attack
-                        isSpecialAttack = true;
-                        // Perform animation for special attack here
-                        for (int i = 0; i < handfightanimation.length; i++) {
-                            handImage = handfightanimation[i];
-                            panel.repaint();
-                            Thread.sleep(80);
-                        }
-                        specialattack(); // Trigger special attack after animation
-                        break;
-                    }
-                    Thread.sleep(50);
-                }
-                isSpecialAttack = false; // Reset special attack
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         });
-        specialAttackThread.start();
+
+        animationThread.start();
     }
 
+    // other method
     public void updatePosition(int playerX, int playerY) {
         this.x = playerX;
         this.y = playerY;
-    }
-
-    public void checkCollision(DummyEnemy enemy, int damage) {
-        Rectangle swordRect = new Rectangle(x, y, handImage.getWidth(null), handImage.getHeight(null));
-        Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
-
-        if (swordRect.intersects(enemyRect) && isAttacking) {
-            boolean knockFromRight = panel.getPlayer().getX() > enemy.getX();
-            enemy.takeDamage(damage, knockFromRight);
-            isAttacking = false;
-        }
     }
 
     private void resetHitbox() {
@@ -182,4 +170,5 @@ public class Hand extends Weapon {
     private DummyEnemy getDummyEnemyReference() {
         return this.getPanel().getDummyEnemy();
     }
+
 }

@@ -20,6 +20,9 @@ public class Player extends Entity {
     private Image originalImg;
     private Hand hand;
     private Weapon heldWeapon;
+    private boolean facingLeft;
+    boolean isDashLeft = false;
+    boolean isDashRight = false;
 
     public Player(int x, int y, Image img, Image handImage, GamePanel panel) {
         super(x, y);
@@ -32,7 +35,7 @@ public class Player extends Entity {
 
         hand = new Hand(x + width, y + height, handImage, this.panel);
         new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
-        heldWeapon = new Sword(x + width, y + height, 10, this.panel);
+        // heldWeapon = new Sword(x + width, y + height, 10, this.panel);
 
         // this.healthBarImg = healthBarImg;
         // this.maxHealth = 100;
@@ -40,6 +43,18 @@ public class Player extends Entity {
     }
 
     // setter and getter
+    public void setDashLeft(boolean isDashLeft) {
+        this.isDashLeft = isDashLeft;
+    }
+
+    public void setDashRight(boolean isDashRight) {
+        this.isDashRight = isDashRight;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
     public Hand getHand() {
         return hand;
     }
@@ -48,14 +63,46 @@ public class Player extends Entity {
         return heldWeapon;
     }
 
+    public boolean isFacingLeft() {
+        return facingLeft;
+    }
+
     // overide method
     @Override
     public void set() {
+        int dashDistance = 60;
+        boolean canDash = true;
+        if (isDashLeft) {
+            for (Wall wall : panel.walls) {
+                Rectangle nextX = new Rectangle(x - dashDistance, y, width, height);
+                if (nextX.intersects(wall.hitbox)) {
+                    canDash = false;
+                    break;
+                }
+            }
+            if (canDash) {
+                x -= dashDistance;
+            }
+        } else if (isDashRight) {
+            for (Wall wall : panel.walls) {
+                Rectangle nextX = new Rectangle(x + dashDistance, y, width, height);
+                if (nextX.intersects(wall.hitbox)) {
+                    canDash = false;
+                    break;
+                }
+            }
+            if (canDash) {
+                x += dashDistance;
+            }
+        }
+        isDashLeft = false;
+        isDashRight = false;
+
         if (keyLeft && !keyRight) {
             xspeed -= 0.5;
-            // facingLeft = true;
+            facingLeft = true;
         } else if (!keyLeft && keyRight) {
-            // facingLeft = false;
+            facingLeft = false;
             xspeed += 0.5;
         } else {
             xspeed *= 0.6;
