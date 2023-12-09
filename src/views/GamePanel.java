@@ -14,8 +14,6 @@ import controller.PlayerMaker;
 import entity.DummyEnemy;
 import entity.Player;
 import entity.Wall;
-import entity.Weapon.Sword;
-import entity.Weapon.Weapon;
 
 public class GamePanel extends JPanel implements Runnable {
     private Player player;
@@ -26,8 +24,13 @@ public class GamePanel extends JPanel implements Runnable {
     private MouseInput mouseInput;
     private KeyInput keychecker;
     private DummyEnemy dummyEnemy;
+    private JLabel healthLabel;
 
     public GamePanel() {
+        initComponents();
+    }
+
+    private void initComponents() {
         playerMaker = new PlayerMaker();
         player = playerMaker.createPlayer(500, 900, this);
 
@@ -44,6 +47,13 @@ public class GamePanel extends JPanel implements Runnable {
         Loader load = new Loader();
         BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
         dummyEnemy = new DummyEnemy(900, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
+
+        // Label darah dummy
+        healthLabel = new JLabel("Health: " + dummyEnemy.getHealth()); // Mendapatkan nilai awal darah Dummy
+        healthLabel.setForeground(Color.RED); // Warna teks merah
+        add(healthLabel);
+
+        // gameloop thread
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -79,6 +89,30 @@ public class GamePanel extends JPanel implements Runnable {
         return player;
     }
 
+    public void playerHealth(Graphics g) {
+        player.setHealth(100);
+        Graphics2D gtd = (Graphics2D) g;
+        gtd.setColor(Color.RED);
+        gtd.setFont(new Font("Arial", Font.PLAIN, 14));
+        FontMetrics metrics = gtd.getFontMetrics();
+        String healthText = "Health: " + player.getHealth();
+        Point textPosition = player.getHealthTextPosition();
+        gtd.drawString(healthText, textPosition.x, textPosition.y);
+        healthLabel.setText("Health: " + dummyEnemy.getHealth());
+    }
+
+    public void dummyHealth(Graphics g) {
+        Graphics2D gtd = (Graphics2D) g;
+        gtd.setColor(Color.RED);
+        gtd.setFont(new Font("Arial", Font.PLAIN, 14));
+        FontMetrics metrics = gtd.getFontMetrics();
+        String healthText = "Health: " + dummyEnemy.getHealth();
+        int textWidth = metrics.stringWidth(healthText);
+        int textX = dummyEnemy.getX() + (dummyEnemy.getWidth() - textWidth) / 2;
+        int textY = dummyEnemy.getY() - 10;
+        gtd.drawString(healthText, textX, textY);
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -88,6 +122,10 @@ public class GamePanel extends JPanel implements Runnable {
         for (Wall wall : walls) {
             wall.draw(gtd);
         }
+        playerHealth(gtd);
+        dummyHealth(gtd);
+        // Darah Dummy
+
     }
 
 }

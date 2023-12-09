@@ -63,6 +63,10 @@ public class Hand extends Weapon {
         return dashDistance;
     }
 
+    private DummyEnemy getDummyEnemyReference() {
+        return this.getPanel().getDummyEnemy();
+    }
+
     // override method
     public void draw(Graphics2D g2d) {
         if (heldWeapon != null) {
@@ -84,16 +88,12 @@ public class Hand extends Weapon {
 
     @Override
     public void hit(DummyEnemy enemy, int damage) {
-        Rectangle swordRect = new Rectangle(x, y, handImage.getWidth(null), handImage.getHeight(null));
+        Rectangle handRect = new Rectangle(x, y, handImage.getWidth(null), handImage.getHeight(null));
         Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
 
-        if (swordRect.intersects(enemyRect) && isAttacking) {
+        if (handRect.intersects(enemyRect) && isAttacking) {
             boolean knockFromRight = panel.getPlayer().getX() > enemy.getX();
             enemy.takeDamage(damage, knockFromRight);
-            if (panel.getPlayer().isFacingLeft()) {
-                handImage = animated.flipImageHorizontally((BufferedImage) handImage);
-            }
-
             isAttacking = false;
         }
     }
@@ -103,7 +103,13 @@ public class Hand extends Weapon {
         this.animation = animated.handfightanimation();
         totalFrames = animation.length;
         isAttacking = true;
-
+        boolean isFacingLeft = panel.getPlayer().isFacingLeft();
+        if (isFacingLeft) {
+            for (int i = 1; i < totalFrames; i++) {
+                animation[i] = animated.flipImageVertically(animation[i]);
+            }
+            isFacingLeft = false;
+        }
         Thread animationThread = new Thread(() -> {
             for (int i = 1; i < totalFrames; i++) {
                 try {
@@ -113,13 +119,11 @@ public class Hand extends Weapon {
                 }
                 handImage = animation[i];
                 panel.repaint();
-
-                hit(getDummyEnemyReference(), 1);
             }
+            hit(getDummyEnemyReference(), 1);
             handImage = animation[0];
             isAttacking = false;
-            resetHitbox();
-            panel.repaint();
+            // resetHitbox();
         });
         animationThread.start();
     }
@@ -165,10 +169,6 @@ public class Hand extends Weapon {
 
     private void resetHitbox() {
         this.hitbox = new Rectangle(x, y, handImage.getWidth(null), handImage.getHeight(null));
-    }
-
-    private DummyEnemy getDummyEnemyReference() {
-        return this.getPanel().getDummyEnemy();
     }
 
 }

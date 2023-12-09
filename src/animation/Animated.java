@@ -1,5 +1,6 @@
 package animation;
 
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -19,7 +20,6 @@ public class Animated {
         public BufferedImage[] swingAnimation() {
                 animation = new BufferedImage[7];
                 animation[0] = image.getSubimage(448, 0, 64, 64);
-                System.out.println(animation[0]);
                 animation[1] = (BufferedImage) Loader.loadImage(
                                 "src/assets/slahanimation/File1.png");
                 animation[2] = (BufferedImage) Loader.loadImage(
@@ -72,10 +72,47 @@ public class Animated {
         }
 
         public BufferedImage flipImageHorizontally(BufferedImage img) {
-                AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
-                tx.translate(-img.getWidth(null), 0);
-                AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-                return op.filter(img, null);
+                // Pastikan gambar yang dimuat adalah BufferedImage
+                if (img instanceof BufferedImage) {
+                        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+                        tx.translate(-img.getWidth(null), 0);
+                        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                        return op.filter(img, null);
+                } else {
+                        // Jika bukan BufferedImage, konversi terlebih dahulu
+                        BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null),
+                                        BufferedImage.TYPE_INT_ARGB);
+                        Graphics2D bGr = bufferedImage.createGraphics();
+                        bGr.drawImage(img, 0, 0, null);
+                        bGr.dispose();
+
+                        // Kemudian lakukan flipping
+                        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+                        tx.translate(-bufferedImage.getWidth(null), 0);
+                        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                        return op.filter(bufferedImage, null);
+                }
         }
+
+        public BufferedImage flipImageVertically(BufferedImage img) {
+                if (img instanceof BufferedImage) {
+                        AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
+                        tx.translate(0, -img.getHeight(null));
+                        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                        return op.filter(img, null);
+                } else {
+                        BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null),
+                                        BufferedImage.TYPE_INT_ARGB);
+                        Graphics2D bGr = bufferedImage.createGraphics();
+                        bGr.drawImage(img, 0, 0, null);
+                        bGr.dispose();
+
+                        AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
+                        tx.translate(0, -bufferedImage.getHeight(null));
+                        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                        return op.filter(bufferedImage, null);
+                }
+        }
+
         // Tambah Animasi Di Bawah Ini
 }

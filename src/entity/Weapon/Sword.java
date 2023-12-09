@@ -9,12 +9,13 @@ import entity.DummyEnemy;
 import views.GamePanel;
 
 public class Sword extends Weapon {
-    private BufferedImage[] swingAnimation;
+    private BufferedImage[] animation;
     private int totalFrames;
     private int damage;
     private boolean isAttacking = false;
     BufferedImage image;
     Loader load = new Loader();
+    Animated animated = new Animated();
 
     public Sword(int x, int y, int damage, GamePanel panel) {
         super(x, y);
@@ -22,8 +23,6 @@ public class Sword extends Weapon {
         image = (BufferedImage) load.mainimage();
         this.img = image.getSubimage(448, 0, 64, 64); // Make sure img is properly assigned
         this.hitbox = new Rectangle(x, y, this.img.getWidth(this.getPanel()), this.img.getHeight(this.getPanel()));
-        Animated animated = new Animated();
-        swingAnimation = animated.swingAnimation();
         this.damage = damage;
     }
 
@@ -37,28 +36,55 @@ public class Sword extends Weapon {
     }
 
     // overide method
+
+    @Override
+    public void hit(DummyEnemy enemy, int damage) {
+        Rectangle swordRect = new Rectangle(x, y, img.getWidth(null), img.getHeight(null));
+        Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+
+        if (swordRect.intersects(enemyRect) && isAttacking) {
+            boolean knockFromRight = panel.getPlayer().getX() > enemy.getX();
+            enemy.takeDamage(damage, knockFromRight);
+            isAttacking = false;
+        }
+    }
+
     @Override
     public void attack() {
-        totalFrames = swingAnimation.length;
+        animation = animated.swingAnimation();
+        totalFrames = animation.length;
+        isAttacking = true;
+        boolean isFacingLeft = panel.getPlayer().isFacingLeft();
+        if (isFacingLeft) {
+            for (int i = 1; i < totalFrames; i++) {
+                animation[i] = animated.flipImageHorizontally(animation[i]);
+            }
+            isFacingLeft = false;
+        }
         Thread animationThread = new Thread(() -> {
-            isAttacking = true;
-
             for (int i = 1; i < totalFrames; i++) {
                 try {
                     Thread.sleep(80);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                img = swingAnimation[i];
-
-                hit(getDummyEnemyReference(), this.damage);
+                img = animation[i];
+                panel.repaint();
             }
-            img = swingAnimation[0];
+            hit(getDummyEnemyReference(), this.damage);
+            img = animation[0];
+            isAttacking = false;
             resetHitbox();
         });
         animationThread.start();
     }
 
+    @Override
+    public void specialattack() {
+
+    }
+
+    // other method
     private void resetHitbox() {
         this.hitbox = new Rectangle(x, y, this.img.getWidth(this.getPanel()), this.img.getHeight(this.getPanel()));
     }
@@ -77,23 +103,6 @@ public class Sword extends Weapon {
         // // posisis saat pedang hadap kiri
         // this.x = handX - 20;
         // this.y = handY;
-
-    }
-
-    @Override
-    public void hit(DummyEnemy enemy, int damage) {
-        Rectangle swordRect = new Rectangle(x, y, img.getWidth(null), img.getHeight(null));
-        Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
-
-        if (swordRect.intersects(enemyRect) && isAttacking) {
-            boolean knockFromRight = panel.getPlayer().getX() > enemy.getX();
-            enemy.takeDamage(damage, knockFromRight);
-            isAttacking = false;
-        }
-    }
-
-    @Override
-    public void specialattack() {
 
     }
 

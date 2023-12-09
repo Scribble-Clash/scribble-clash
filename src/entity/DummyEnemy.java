@@ -31,6 +31,10 @@ public class DummyEnemy extends Entity {
         return new Rectangle(x, y, width, height);
     }
 
+    public int getHealth() {
+        return health;
+    }
+
     // Overide Method
     @Override
     public void set() {

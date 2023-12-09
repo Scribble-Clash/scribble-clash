@@ -14,9 +14,6 @@ public class Player extends Entity {
     public boolean keyUp;
     private int health;
     protected double xspeed, yspeed;
-
-    // private int maxHealth;
-    // private Image healthBarImg;
     private Image originalImg;
     private Hand hand;
     private Weapon heldWeapon;
@@ -36,10 +33,6 @@ public class Player extends Entity {
         hand = new Hand(x + width, y + height, handImage, this.panel);
         new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
         // heldWeapon = new Sword(x + width, y + height, 10, this.panel);
-
-        // this.healthBarImg = healthBarImg;
-        // this.maxHealth = 100;
-        // this.health = maxHealth;
     }
 
     // setter and getter
@@ -65,6 +58,20 @@ public class Player extends Entity {
 
     public boolean isFacingLeft() {
         return facingLeft;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public Point getHealthTextPosition() {
+        int textX = x + (width) - 60;
+        int textY = y - 10;
+        return new Point(textX, textY);
     }
 
     // overide method
@@ -125,28 +132,41 @@ public class Player extends Entity {
         } else if (xspeed > 0) {
             img = originalImg;
         }
+
         if (keyUp) {
-            hitbox.y++;
+            hitbox.y--;
             for (Wall wall : panel.walls) {
                 if (wall.hitbox.intersects(hitbox)) {
-                    yspeed = -6;
+                    y = wall.hitbox.y + wall.hitbox.height;
                 }
             }
-            hitbox.y--;
-
+            hitbox.y++;
         }
-        // Tembok collisions
+
+        // Logika collision dengan dinding (horizontal)
         hitbox.x += xspeed;
         for (Wall wall : panel.walls) {
             if (hitbox.intersects(wall.hitbox)) {
                 if (xspeed > 0) {
-
                     hitbox.x = wall.hitbox.x - hitbox.width;
                 } else if (xspeed < 0) {
                     hitbox.x = wall.hitbox.x + wall.hitbox.width;
                 }
                 xspeed = 0;
                 x = hitbox.x;
+            }
+        }
+        // Logika collision dengan dinding (vertical)
+        hitbox.y += yspeed;
+        for (Wall wall : panel.walls) {
+            if (hitbox.intersects(wall.hitbox)) {
+                if (yspeed > 0) {
+                    hitbox.y = wall.hitbox.y - hitbox.height;
+                } else if (yspeed < 0) {
+                    hitbox.y = wall.hitbox.y + wall.hitbox.height;
+                }
+                yspeed = 0;
+                y = hitbox.y;
             }
         }
         boolean onGround = false;
@@ -160,7 +180,7 @@ public class Player extends Entity {
         }
         hitbox.y--;
 
-        // Penanganan saat di atas tanah
+        // Logika lompatan saat di atas tanah
         if (onGround) {
             if (keyUp) {
                 yspeed = -6;
@@ -177,7 +197,6 @@ public class Player extends Entity {
 
         hitbox.x = x;
         hitbox.y = y;
-
     }
 
     @Override
@@ -195,7 +214,6 @@ public class Player extends Entity {
     public void reduceHealth(int amount) {
         health -= amount;
         if (health <= 0) {
-
         }
     }
 
