@@ -30,9 +30,9 @@ public class Player extends Entity {
         this.hitbox = new Rectangle(x, y, width, height);
         this.originalImg = img;
 
-        hand = new Hand(x + width, y + height, handImage);
+        hand = new Hand(x + width, y + height, handImage, this.panel);
         new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
-        heldWeapon = new Sword(x + width, y + height, 10, this.panel);
+        // heldWeapon = new Sword(x + width, y + height, 10, this.panel);
 
         // this.healthBarImg = healthBarImg;
         // this.maxHealth = 100;
@@ -182,16 +182,6 @@ public class Player extends Entity {
             heldWeapon.draw(gtd);
         }
         hand.draw(gtd);
-
-        // if (facingLeft) {
-        // hand.updatePosition(x + width / 2 - 60, y + height / 2);
-        // } else {
-        // hand.updatePosition(x + width / 2, y + height / 2);
-        // }
-
-        // if (xspeed == 0 && facingLeft) {
-        // hand.updatePosition(x + width / 2 - 60, y + height / 2);
-        // }
     }
 
 }

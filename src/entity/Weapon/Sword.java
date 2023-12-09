@@ -21,7 +21,7 @@ public class Sword extends Weapon {
         this.hitbox = new Rectangle(x, y, img.getWidth(this.getPanel()), img.getHeight(this.getPanel()));
         Animated animated = new Animated();
         swingAnimation = animated.swingAnimation();
-        this.damage = damage; // Inisialisasi damage dari pedang
+        this.damage = damage;
     }
 
     public void checkCollision(DummyEnemy enemy) {

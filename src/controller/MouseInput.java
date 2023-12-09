@@ -41,8 +41,13 @@ public class MouseInput implements MouseListener, MouseMotionListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (isMouseInside) {
-            updateHandPosition(e.getX(), e.getY());
-            player.getHeldWeapon().attack();
+            if (player.getHeldWeapon() == null) {
+                updateHandPosition(e.getX(), e.getY());
+                player.getHand().attack();
+            } else {
+                updateHandPosition(e.getX(), e.getY());
+                player.getHeldWeapon().attack();
+            }
         }
     }
 
