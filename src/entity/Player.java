@@ -39,17 +39,16 @@ public class Player extends Entity {
         // this.health = maxHealth;
     }
 
-    public void reduceHealth(int amount) {
-        health -= amount;
-        if (health <= 0) {
-
-        }
+    // setter and getter
+    public Hand getHand() {
+        return hand;
     }
 
     public Weapon getHeldWeapon() {
         return heldWeapon;
     }
 
+    // overide method
     @Override
     public void set() {
         if (keyLeft && !keyRight) {
@@ -134,6 +133,25 @@ public class Player extends Entity {
 
     }
 
+    @Override
+    public void draw(Graphics2D gtd) {
+        gtd.drawImage(img, x, y, width, height, panel);
+
+        if (heldWeapon != null) {
+            heldWeapon.setPosition(hand.getX(), hand.getY());
+            heldWeapon.draw(gtd);
+        }
+        hand.draw(gtd);
+    }
+
+    // other method
+    public void reduceHealth(int amount) {
+        health -= amount;
+        if (health <= 0) {
+
+        }
+    }
+
     public void updateHandPosition(int mouseX, int mouseY) {
         int playerX = getX() + getWidth() / 2;
         int playerY = getY() + getHeight() / 2;
@@ -167,21 +185,6 @@ public class Player extends Entity {
         tx.translate(-bufferedImage.getWidth(null), 0);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         return op.filter(bufferedImage, null);
-    }
-
-    public Hand getHand() {
-        return hand;
-    }
-
-    @Override
-    public void draw(Graphics2D gtd) {
-        gtd.drawImage(img, x, y, width, height, panel);
-
-        if (heldWeapon != null) {
-            heldWeapon.setPosition(hand.getX(), hand.getY());
-            heldWeapon.draw(gtd);
-        }
-        hand.draw(gtd);
     }
 
 }

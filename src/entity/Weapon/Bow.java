@@ -17,11 +17,13 @@ public class Bow extends Weapon {
 
     }
 
+    // setter and getter
     public void setPosition(int handX, int handY) {
         this.x = handX;
         this.y = handY;
     }
 
+    // overide method
     @Override
     public void hit() {
     }
@@ -31,4 +33,8 @@ public class Bow extends Weapon {
 
     }
 
+    @Override
+    public void specialattack() {
+
+    }
 }

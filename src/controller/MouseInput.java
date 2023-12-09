@@ -9,6 +9,7 @@ public class MouseInput implements MouseListener, MouseMotionListener {
     private boolean isMouseInside;
     private int lastMouseX;
     private int lastMouseY;
+    long pressTime;
 
     public MouseInput(Player player) {
         this.player = player;
@@ -24,6 +25,24 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         lastMouseY = 0;
     }
 
+    // setter and getter
+    public int getLastMouseX() {
+        return lastMouseX;
+    }
+
+    public int getLastMouseY() {
+        return lastMouseY;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public boolean isMouseInside() {
+        return isMouseInside;
+    }
+
+    // Overide Method
     @Override
     public void mouseMoved(MouseEvent e) {
         if (isMouseInside) {
@@ -38,7 +57,6 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         }
     }
 
-    @Override
     public void mouseClicked(MouseEvent e) {
         if (isMouseInside) {
             if (player.getHeldWeapon() == null) {
@@ -51,17 +69,31 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         }
     }
 
-    @Override
     public void mousePressed(MouseEvent e) {
         if (isMouseInside) {
-            updateHandPosition(e.getX(), e.getY());
+            // Jika penahanan terjadi, mulai hitung durasi
+            pressTime = System.currentTimeMillis(); // Start tracking press time
+            System.out.println("Awal Hold");
         }
     }
 
-    @Override
     public void mouseReleased(MouseEvent e) {
         if (isMouseInside) {
+            long releaseTime = System.currentTimeMillis();
+            long holdDuration = releaseTime - pressTime;
+
             updateHandPosition(e.getX(), e.getY());
+
+            if (holdDuration >= 5000) {
+                player.getHand().specialattack(); // Special attack
+                System.out.println("Akhir Hold 5 dtk");
+
+            } else if (holdDuration >= 2000) {
+                player.getHand().specialattack(); // Special attack
+                System.out.println("Akhir Hold 2 dtk");
+            } else {
+                System.out.println("Charge Gagal");
+            }
         }
     }
 
@@ -79,6 +111,7 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         player.getHand().updatePosition(playerX - player.getHand().getWidth() / 2, initialHandY);
     }
 
+    // other method
     private void updateHandPosition(int mouseX, int mouseY) {
         int playerX = player.getX() + player.getWidth() / 2;
         int playerY = player.getY() + player.getHeight() / 2;
@@ -109,19 +142,4 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         player.getHand().updatePosition(handX, handY);
     }
 
-    public int getLastMouseX() {
-        return lastMouseX;
-    }
-
-    public int getLastMouseY() {
-        return lastMouseY;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public boolean isMouseInside() {
-        return isMouseInside;
-    }
 }

@@ -16,6 +16,10 @@ public class GameMap {
 
     }
 
+    public ArrayList<Wall> getWalls() {
+        return walls;
+    }
+
     public void testMap() {
         image = (BufferedImage) loadimg.mainimage();
         Image groundImage = image.getSubimage(192, 450, 64, 64);
@@ -46,8 +50,6 @@ public class GameMap {
     // }
     // }
 
-    public ArrayList<Wall> getWalls() {
-        return walls;
-    }
+    // tambah map baru di bawah
 
 }

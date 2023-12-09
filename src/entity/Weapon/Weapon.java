@@ -9,6 +9,7 @@ public abstract class Weapon extends Entity {
         super(x, y);
     }
 
+    // overide method
     @Override
     public void set() {
     }
@@ -18,10 +19,13 @@ public abstract class Weapon extends Entity {
         g2d.drawImage(img, x, y, panel);
     }
 
+    // abstract method
     public abstract void setPosition(int x, int y);
 
     public abstract void hit();
 
     public abstract void attack();
+
+    public abstract void specialattack();
 
 }

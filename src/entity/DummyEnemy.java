@@ -26,6 +26,12 @@ public class DummyEnemy extends Entity {
         knockbackX = 0;
     }
 
+    // setter and getter
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
+    }
+
+    // Overide Method
     @Override
     public void set() {
         if (isDefeated) {
@@ -66,6 +72,7 @@ public class DummyEnemy extends Entity {
         gtd.drawImage(img, x, y, width, height, panel);
     }
 
+    // Other Method
     public void takeDamage(int damage, boolean knockFromRight) {
         health -= damage;
         if (health <= 0 && !isDefeated) {
@@ -87,7 +94,4 @@ public class DummyEnemy extends Entity {
         }
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
-    }
 }

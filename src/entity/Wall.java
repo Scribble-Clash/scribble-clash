@@ -12,10 +12,12 @@ public class Wall extends Entity {
         this.hitbox = new Rectangle(x, y, img.getWidth(null) - 11, img.getHeight(null));
     }
 
+    // overide method
     @Override
     public void set() {
     }
 
+    @Override
     public void draw(Graphics2D g2d) {
         g2d.drawImage(img, x, y, null);
     }

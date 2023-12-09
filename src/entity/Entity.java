@@ -14,6 +14,7 @@ public abstract class Entity {
         this.y = y;
     }
 
+    // setter and getter
     public int getX() {
         return x;
     }
@@ -38,6 +39,7 @@ public abstract class Entity {
         return panel;
     }
 
+    // abstract method
     public abstract void set();
 
     public abstract void draw(Graphics2D gtd);
