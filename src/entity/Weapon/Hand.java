@@ -114,15 +114,15 @@ public class Hand extends Weapon {
             int newAttackDamage = 5; // Damage for special attack
             int forwardMovement = 10; // Adjust forward movement pixels
 
-            int playerX = getX(); // Get player X position
-            int playerY = getY(); // Get player Y position
+            int playerX = panel.getPlayer().getX(); // Get player X position
+            int playerY = panel.getPlayer().getY(); // Get player Y position
 
             // Update position for special attack (move forward)
             int newX = playerX + forwardMovement; // Change X position
             int newY = playerY; // Change Y position accordingly
 
             // Update position
-            updatePosition(newX, newY);
+            getPanel().getPlayer().updatePosition(newX, newY);
             DummyEnemy enemy = getDummyEnemyReference();
             if (enemy != null) {
                 checkCollision(enemy, newAttackDamage);

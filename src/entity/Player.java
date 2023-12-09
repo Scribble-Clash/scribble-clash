@@ -32,7 +32,7 @@ public class Player extends Entity {
 
         hand = new Hand(x + width, y + height, handImage, this.panel);
         new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
-        // heldWeapon = new Sword(x + width, y + height, 10, this.panel);
+        heldWeapon = new Sword(x + width, y + height, 10, this.panel);
 
         // this.healthBarImg = healthBarImg;
         // this.maxHealth = 100;
@@ -150,6 +150,11 @@ public class Player extends Entity {
         if (health <= 0) {
 
         }
+    }
+
+    public void updatePosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public void updateHandPosition(int mouseX, int mouseY) {

@@ -3,6 +3,7 @@ package controller;
 import java.awt.event.*;
 
 import entity.Player;
+import entity.Weapon.Sword;
 
 public class MouseInput implements MouseListener, MouseMotionListener {
     private Player player;
@@ -81,18 +82,32 @@ public class MouseInput implements MouseListener, MouseMotionListener {
         if (isMouseInside) {
             long releaseTime = System.currentTimeMillis();
             long holdDuration = releaseTime - pressTime;
-
             updateHandPosition(e.getX(), e.getY());
 
-            if (holdDuration >= 5000) {
-                player.getHand().specialattack(); // Special attack
-                System.out.println("Akhir Hold 5 dtk");
+            if (player.getHeldWeapon() == null) {
+                if (holdDuration >= 3000) {
+                    player.getHand().specialattack();
+                    System.out.println("Akhir Hold 3 dtk");
 
-            } else if (holdDuration >= 2000) {
-                player.getHand().specialattack(); // Special attack
-                System.out.println("Akhir Hold 2 dtk");
-            } else {
-                System.out.println("Charge Gagal");
+                } else if (holdDuration >= 1500) {
+                    player.getHand().specialattack();
+                    System.out.println("Akhir Hold 1.5 dtk");
+                } else {
+                    System.out.println("Charge Gagal");
+                }
+            } else if (player.getHeldWeapon() instanceof Sword) {
+                Sword sword = (Sword) player.getHeldWeapon();
+
+                if (holdDuration >= 5000) {
+                    sword.specialattack();
+                    System.out.println("Sword Special Attack 5 dtk");
+
+                } else if (holdDuration >= 2000) {
+                    sword.specialattack();
+                    System.out.println("Sword Special Attack 2 dtk");
+                } else {
+                    System.out.println("Sword Charge Gagal");
+                }
             }
         }
     }
