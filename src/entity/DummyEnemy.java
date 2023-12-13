@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -73,7 +74,17 @@ public class DummyEnemy extends Entity {
 
     @Override
     public void draw(Graphics2D gtd) {
-        gtd.drawImage(img, x, y, width, height, panel);
+        if (!isDefeated) {
+            gtd.drawImage(img, x, y, width, height, panel);
+            gtd.setColor(Color.RED);
+            gtd.fillRect(x, y - 10, width, 5); // Contoh: Gambar label darah sebagai kotak merah di atas enemy
+            gtd.setColor(Color.GREEN);
+            double healthBarWidth = ((double) health / 100) * width;
+            gtd.fillRect(x, y - 10, (int) healthBarWidth, 5); // Contoh: Gambar label hijau sebagai indikator darah
+        } else {
+            gtd.drawImage(img, x, y, width, height, panel);
+
+        }
     }
 
     // Other Method
