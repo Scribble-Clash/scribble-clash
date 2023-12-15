@@ -11,6 +11,9 @@ import javax.imageio.ImageIO;
 public class Loader {
     private BufferedImage image;
 
+    public Loader Loader() {
+        return this;
+    }
     public static Image loadImage(String imagePath) {
         Image image = null;
         try {
