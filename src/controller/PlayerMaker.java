@@ -17,9 +17,9 @@ public class PlayerMaker {
         Image bodyimg = image.getSubimage(576, 128, 64, 64);
         Image handimg = image.getSubimage(640, 0, 64, 64);
 
-        Player player1 = new Player(x, y, bodyimg, handimg, panel);
-        players.add(player1);
-        return player1;
+        Player player = new Player(x, y, 1, panel);
+        players.add(player);
+        return player;
     }
 
     public ArrayList<Player> getPlayers() {

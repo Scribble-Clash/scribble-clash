@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 
 import animation.AnimationManager;
 import controller.Loader;
+import data.staticPos;
 import views.GamePanel;
 
 public class DummyEnemy extends Entity {
@@ -54,17 +55,20 @@ public class DummyEnemy extends Entity {
         ySpeed += 0.5;
         y += ySpeed;
 
-        if (x <= 650) {
-            moveLeft = false;
-        } else if (x >= 1200) {
-            moveLeft = true;
-        }
+        x = staticPos.x;
+        y = staticPos.y;
 
-        if (moveLeft) {
-            x -= 2;
-        } else {
-            x += 2;
-        }
+//        if (x <= 650) {
+//            moveLeft = false;
+//        } else if (x >= 1200) {
+//            moveLeft = true;
+//        }
+//
+//        if (moveLeft) {
+//            x -= 2;
+//        } else {
+//            x += 2;
+//        }
 
         for (Wall wall : panel.walls) {
             if (wall.hitbox.intersects(getBounds())) {

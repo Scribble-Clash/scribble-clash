@@ -3,11 +3,17 @@ package entity;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
+import java.util.UUID;
 
+import api.Position;
+import controller.Loader;
 import entity.Weapon.*;
 import views.GamePanel;
 
 public class Player extends Entity {
+    String id;
+    // generate 4 length string
+    StringBuilder roomCode;
     private boolean keyLeft;
     private boolean keyRight;
     private boolean keyDown;
@@ -26,8 +32,17 @@ public class Player extends Entity {
     private int startingX;
     private int startingY;
 
-    public Player(int x, int y, Image img, Image handImage, GamePanel panel) {
+    public Player(int x, int y, int colorId, GamePanel panel) {
         super(x, y);
+
+        BufferedImage sprites = (BufferedImage) new Loader().mainimage();
+        switch (colorId) {
+            case 1:
+                this.img = sprites.getSubimage(576, 448, 64, 64);
+                this.hand= new Hand(x + width, y + height, sprites.getSubimage(640,0,64,64), this.panel);
+            case 2:
+        }
+
         this.panel = panel;
         this.img = img;
         width = img.getWidth(panel);
@@ -41,9 +56,22 @@ public class Player extends Entity {
         startingX = x;
         startingY = y;
 
-        hand = new Hand(x + width, y + height, handImage, this.panel);
         new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
         heldWeapon = new Sword(x + width, y + height, 10, this.panel);
+
+        // generate string random 6 character
+        roomCode = new StringBuilder();
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        int length = 6;
+        for (int i = 0; i < length; i++) {
+            int index = (int) (Math.random() * characters.length());
+            roomCode.append(characters.charAt(index));
+        }
+
+        UUID uuid = UUID.randomUUID();
+        id = uuid.toString();
+
+        Position.listenPos(roomCode.toString(), id);
     }
 
     // setter and getter
@@ -236,6 +264,7 @@ public class Player extends Entity {
         x += xspeed;
         y += yspeed;
 
+        Position position = new Position(roomCode.toString(), id, x, y);
         hitbox.x = x;
         hitbox.y = y;
 
