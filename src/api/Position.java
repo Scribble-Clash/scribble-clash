@@ -2,6 +2,7 @@ package api;
 
 import com.google.firebase.database.*;
 import data.staticPos;
+import entity.Player;
 
 public class Position {
     public int x;
@@ -22,15 +23,14 @@ public class Position {
         positionRef.setValueAsync(this);
     }
 
-    public static void listenPos(String roomCode, String username) {
+    public static void listenPos(String roomCode, String username, Player player) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
         ref.child(roomCode).child(username).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Position pos = dataSnapshot.getValue(Position.class);
-                staticPos.x = pos.x;
-                staticPos.y = pos.y;
+                player.setPosition(pos.x, pos.y);
             }
 
             @Override

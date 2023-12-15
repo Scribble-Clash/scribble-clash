@@ -55,20 +55,20 @@ public class DummyEnemy extends Entity {
         ySpeed += 0.5;
         y += ySpeed;
 
-        x = staticPos.x;
-        y = staticPos.y;
+//        x = staticPos.x;
+//        y = staticPos.y;
 
-//        if (x <= 650) {
-//            moveLeft = false;
-//        } else if (x >= 1200) {
-//            moveLeft = true;
-//        }
-//
-//        if (moveLeft) {
-//            x -= 2;
-//        } else {
-//            x += 2;
-//        }
+        if (x <= 650) {
+            moveLeft = false;
+        } else if (x >= 1200) {
+            moveLeft = true;
+        }
+
+        if (moveLeft) {
+            x -= 2;
+        } else {
+            x += 2;
+        }
 
         for (Wall wall : panel.walls) {
             if (wall.hitbox.intersects(getBounds())) {

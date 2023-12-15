@@ -13,7 +13,7 @@ import views.GamePanel;
 public class Player extends Entity {
     String id;
     // generate 4 length string
-    StringBuilder roomCode;
+    String roomCode;
     private boolean keyLeft;
     private boolean keyRight;
     private boolean keyDown;
@@ -32,9 +32,10 @@ public class Player extends Entity {
     private int startingX;
     private int startingY;
 
-    public Player(int x, int y, int colorId, GamePanel panel) {
+    public Player(int x, int y, int colorId, GamePanel panel, String roomCode, String playerId) {
         super(x, y);
 
+        this.id = playerId;
         BufferedImage sprites = (BufferedImage) new Loader().mainimage();
         switch (colorId) {
             case 1:
@@ -60,18 +61,15 @@ public class Player extends Entity {
         heldWeapon = new Sword(x + width, y + height, 10, this.panel);
 
         // generate string random 6 character
-        roomCode = new StringBuilder();
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        int length = 6;
-        for (int i = 0; i < length; i++) {
-            int index = (int) (Math.random() * characters.length());
-            roomCode.append(characters.charAt(index));
-        }
+//        roomCode = new StringBuilder();
+//        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+//        int length = 6;
+//        for (int i = 0; i < length; i++) {
+//            int index = (int) (Math.random() * characters.length());
+//            roomCode.append(characters.charAt(index));
+//        }
 
-        UUID uuid = UUID.randomUUID();
-        id = uuid.toString();
-
-        Position.listenPos(roomCode.toString(), id);
+        this.roomCode = roomCode;
     }
 
     // setter and getter
@@ -263,11 +261,14 @@ public class Player extends Entity {
         // Pembaruan posisi
         x += xspeed;
         y += yspeed;
-
-        Position position = new Position(roomCode.toString(), id, x, y);
         hitbox.x = x;
         hitbox.y = y;
 
+    }
+
+    public void setPosition (int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override

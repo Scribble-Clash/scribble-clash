@@ -16,7 +16,7 @@ import entity.Player;
 import entity.Wall;
 
 public class GamePanel extends JPanel implements Runnable {
-    private Player player;
+    private ArrayList<Player> player = new ArrayList<>();
     private Thread gameThread;
     public ArrayList<Wall> walls = new ArrayList<>();
     private GameMap gameMap;
@@ -31,11 +31,12 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void initComponents() {
-        player = new PlayerMaker().createPlayer(500, 900, this);
-        keychecker = new KeyInput(player);
+        player.add(new PlayerMaker().createPlayer(500, 900, this));
+        player.add(new PlayerMaker().addPlayer(500, 900, this));
+        keychecker = new KeyInput(player.get(0));
         addKeyListener(keychecker);
 
-        mouseInput = new MouseInput(player);
+        mouseInput = new MouseInput(player.get(0));
         addMouseListener(mouseInput);
         addMouseMotionListener(mouseInput);
 
@@ -43,13 +44,13 @@ public class GamePanel extends JPanel implements Runnable {
         gameMap.testMap();
         walls = gameMap.getWalls();
 
-        Loader load = new Loader();
-        BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
-        dummyEnemy = new DummyEnemy(900, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
-
-        healthLabel = new JLabel("Health: " + dummyEnemy.getHealth());
-        healthLabel.setForeground(Color.RED);
-        add(healthLabel);
+//        Loader load = new Loader();
+//        BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
+//        dummyEnemy = new DummyEnemy(900, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
+//
+//        healthLabel = new JLabel("Health: " + dummyEnemy.getHealth());
+//        healthLabel.setForeground(Color.RED);
+//        add(healthLabel);
 
         gameThread = new Thread(this);
         gameThread.start();
@@ -68,12 +69,12 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
         while (running) {
-            player.set();
-            dummyEnemy.set();
+            player.get(0).set();
+//            dummyEnemy.set();
             if (mouseInput.isMouseInside()) {
-                player.updateHandPosition(mouseInput.getLastMouseX(), mouseInput.getLastMouseY());
+                player.get(0).updateHandPosition(mouseInput.getLastMouseX(), mouseInput.getLastMouseY());
             } else {
-                player.updateHandPosition(mouseInput.getLastMouseX(), mouseInput.getLastMouseY());
+                player.get(0).updateHandPosition(mouseInput.getLastMouseX(), mouseInput.getLastMouseY());
             }
             repaint();
             try {
@@ -107,15 +108,16 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public Player getPlayer() {
-        return player;
+        return player.get(0);
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D gtd = (Graphics2D) g;
-        player.draw(gtd);
-        dummyEnemy.draw(gtd);
+        for (Player player : player)
+            player.draw(gtd);
+//        dummyEnemy.draw(gtd);
         for (Wall wall : walls) {
             wall.draw(gtd);
         }
