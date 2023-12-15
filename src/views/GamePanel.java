@@ -2,7 +2,7 @@ package views;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -17,7 +17,6 @@ import entity.Wall;
 
 public class GamePanel extends JPanel implements Runnable {
     private Player player;
-    private PlayerMaker playerMaker;
     private Thread gameThread;
     public ArrayList<Wall> walls = new ArrayList<>();
     private GameMap gameMap;
@@ -25,17 +24,17 @@ public class GamePanel extends JPanel implements Runnable {
     private KeyInput keychecker;
     private DummyEnemy dummyEnemy;
     private JLabel healthLabel;
+    private volatile boolean running = true;
 
     public GamePanel() {
         initComponents();
     }
 
     private void initComponents() {
-        playerMaker = new PlayerMaker();
-        player = playerMaker.createPlayer(500, 900, this);
-
+        player = new PlayerMaker().createPlayer(500, 900, this);
         keychecker = new KeyInput(player);
         addKeyListener(keychecker);
+
         mouseInput = new MouseInput(player);
         addMouseListener(mouseInput);
         addMouseMotionListener(mouseInput);
@@ -48,23 +47,27 @@ public class GamePanel extends JPanel implements Runnable {
         BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
         dummyEnemy = new DummyEnemy(900, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
 
-        // Label darah dummy
-        healthLabel = new JLabel("Health: " + dummyEnemy.getHealth()); // Mendapatkan nilai awal darah Dummy
-        healthLabel.setForeground(Color.RED); // Warna teks merah
+        healthLabel = new JLabel("Health: " + dummyEnemy.getHealth());
+        healthLabel.setForeground(Color.RED);
         add(healthLabel);
 
-        // gameloop thread
         gameThread = new Thread(this);
         gameThread.start();
-    }
 
-    public KeyInput getKeyChecker() {
-        return keychecker;
+        // JButton pauseButton = new JButton("Pause");
+        // pauseButton.addActionListener(new ActionListener() {
+        // public void actionPerformed(ActionEvent e) {
+        // isPaused = true;
+        // pauseGame();
+        // keychecker.setEnabled(false);
+        // }
+        // });
+        // add(pauseButton);
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (running) {
             player.set();
             dummyEnemy.set();
             if (mouseInput.isMouseInside()) {
@@ -81,36 +84,30 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    // private void pauseGame() {
+    // if (isPaused) {
+    // new PauseFrame(this);
+    // }
+    // }
+
+    // public void resumeGame() {
+    // isPaused = false;
+    // keychecker.setEnabled(true);
+    // }
+
+    // public void stopGame() {
+    // running = false;
+    // }
+    public KeyInput getKeychecker() {
+        return keychecker;
+    }
+
     public DummyEnemy getDummyEnemy() {
         return dummyEnemy;
     }
 
     public Player getPlayer() {
         return player;
-    }
-
-    public void playerHealth(Graphics g) {
-        player.setHealth(100);
-        Graphics2D gtd = (Graphics2D) g;
-        gtd.setColor(Color.RED);
-        gtd.setFont(new Font("Arial", Font.PLAIN, 14));
-        FontMetrics metrics = gtd.getFontMetrics();
-        String healthText = "Health: " + player.getHealth();
-        Point textPosition = player.getHealthTextPosition();
-        gtd.drawString(healthText, textPosition.x, textPosition.y);
-        healthLabel.setText("Health: " + dummyEnemy.getHealth());
-    }
-
-    public void dummyHealth(Graphics g) {
-        Graphics2D gtd = (Graphics2D) g;
-        gtd.setColor(Color.RED);
-        gtd.setFont(new Font("Arial", Font.PLAIN, 14));
-        FontMetrics metrics = gtd.getFontMetrics();
-        String healthText = "Health: " + dummyEnemy.getHealth();
-        int textWidth = metrics.stringWidth(healthText);
-        int textX = dummyEnemy.getX() + (dummyEnemy.getWidth() - textWidth) / 2;
-        int textY = dummyEnemy.getY() - 10;
-        gtd.drawString(healthText, textX, textY);
     }
 
     @Override
@@ -122,10 +119,5 @@ public class GamePanel extends JPanel implements Runnable {
         for (Wall wall : walls) {
             wall.draw(gtd);
         }
-        playerHealth(gtd);
-        dummyHealth(gtd);
-        // Darah Dummy
-
     }
-
 }

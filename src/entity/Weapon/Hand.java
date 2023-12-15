@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import animation.Animated;
+import animation.AnimationManager;
 import entity.DummyEnemy;
 import views.GamePanel;
 
@@ -20,6 +21,7 @@ public class Hand extends Weapon {
     private boolean isAttacking = false;
     private int dashDistance = 20;
     Animated animated = new Animated();
+    private AnimationManager animationManager;
 
     public Hand(int x, int y, Image img, GamePanel panel) {
         super(x, y);
@@ -28,6 +30,8 @@ public class Hand extends Weapon {
         width = handImage.getWidth(null);
         height = handImage.getHeight(null);
         this.hitbox = new Rectangle(x, y, img.getWidth(this.getPanel()), img.getHeight(this.getPanel()));
+        this.animationManager = new AnimationManager(panel);
+
     }
 
     // setter and getter
@@ -74,6 +78,9 @@ public class Hand extends Weapon {
             heldWeapon.draw(g2d);
         }
         g2d.drawImage(handImage, x, y, width, height, panel);
+        if (animationManager.isAnimating()) {
+            g2d.drawImage(animationManager.getCurrentFrame(), x, y, width, height, panel);
+        }
     }
 
     @Override
@@ -133,13 +140,12 @@ public class Hand extends Weapon {
         this.animation = animated.specialhandfightanimation();
         isAttacking = true;
         totalFrames = animation.length;
-        if (panel.getPlayer().isFacingLeft()) { // Menghadap kiri
+        if (panel.getPlayer().isFacingLeft()) {
             panel.getPlayer().setDashLeft(true);
-        } else { // Menghadap kanan
+        } else {
             panel.getPlayer().setDashRight(true);
         }
         Thread animationThread = new Thread(() -> {
-            // Animasi serangan khusus
             for (int i = 0; i < totalFrames; i++) {
                 try {
                     Thread.sleep(80);
@@ -149,7 +155,7 @@ public class Hand extends Weapon {
                 handImage = animation[i];
                 panel.repaint();
 
-                hit(getDummyEnemyReference(), 1);
+                hit(getDummyEnemyReference(), 10);
             }
             handImage = animation[0];
 
@@ -171,4 +177,15 @@ public class Hand extends Weapon {
         this.hitbox = new Rectangle(x, y, handImage.getWidth(null), handImage.getHeight(null));
     }
 
+    public void charge1() {
+        if (!animationManager.isAnimating()) {
+            animationManager.charge1();
+        }
+    }
+
+    public void charge2() {
+        if (!animationManager.isAnimating()) {
+            animationManager.charge2();
+        }
+    }
 }

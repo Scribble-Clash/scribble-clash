@@ -8,11 +8,13 @@ import entity.Weapon.*;
 import views.GamePanel;
 
 public class Player extends Entity {
-    public boolean keyLeft;
-    public boolean keyRight;
-    public boolean keyDown;
-    public boolean keyUp;
+    private boolean keyLeft;
+    private boolean keyRight;
+    private boolean keyDown;
+    private boolean keyUp;
     private int health;
+    private int lives;
+
     protected double xspeed, yspeed;
     private Image originalImg;
     private Hand hand;
@@ -20,6 +22,9 @@ public class Player extends Entity {
     private boolean facingLeft;
     boolean isDashLeft = false;
     boolean isDashRight = false;
+    private boolean isDefeated = false;
+    private int startingX;
+    private int startingY;
 
     public Player(int x, int y, Image img, Image handImage, GamePanel panel) {
         super(x, y);
@@ -30,9 +35,15 @@ public class Player extends Entity {
         this.hitbox = new Rectangle(x, y, width, height);
         this.originalImg = img;
 
+        setHealth(100);
+        setLives(3);
+
+        startingX = x;
+        startingY = y;
+
         hand = new Hand(x + width, y + height, handImage, this.panel);
         new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
-        // heldWeapon = new Sword(x + width, y + height, 10, this.panel);
+        heldWeapon = new Sword(x + width, y + height, 10, this.panel);
     }
 
     // setter and getter
@@ -68,10 +79,30 @@ public class Player extends Entity {
         this.health = health;
     }
 
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
     public Point getHealthTextPosition() {
         int textX = x + (width) - 60;
         int textY = y - 10;
         return new Point(textX, textY);
+    }
+
+    public void setKeyDown(boolean keyDown) {
+        this.keyDown = keyDown;
+    }
+
+    public void setKeyLeft(boolean keyLeft) {
+        this.keyLeft = keyLeft;
+    }
+
+    public void setKeyRight(boolean keyRight) {
+        this.keyRight = keyRight;
+    }
+
+    public void setKeyUp(boolean keyUp) {
+        this.keyUp = keyUp;
     }
 
     // overide method
@@ -191,16 +222,35 @@ public class Player extends Entity {
             yspeed += 0.3;
         }
 
+        // Logika Mati Spawn Lagi
+        int maxYBoundary = 1000;
+        if (y > maxYBoundary) {
+            lives--;
+            if (lives >= 0) {
+                respawnPlayer();
+            } else {
+                isDefeated = true;
+            }
+        }
         // Pembaruan posisi
         x += xspeed;
         y += yspeed;
 
         hitbox.x = x;
         hitbox.y = y;
+
     }
 
     @Override
     public void draw(Graphics2D gtd) {
+        if (!isDefeated) {
+            gtd.drawImage(img, x, y, width, height, panel);
+            gtd.setColor(Color.RED);
+            gtd.fillRect(x, y - 10, width, 5); // Contoh: Gambar label darah sebagai kotak merah di atas enemy
+            gtd.setColor(Color.GREEN);
+            double healthBarWidth = ((double) health / 100) * width;
+            gtd.fillRect(x, y - 10, (int) healthBarWidth, 5); // Contoh: Gambar label hijau sebagai indikator darah
+        }
         gtd.drawImage(img, x, y, width, height, panel);
 
         if (heldWeapon != null) {
@@ -211,7 +261,14 @@ public class Player extends Entity {
     }
 
     // other method
-    public void reduceHealth(int amount) {
+
+    private void respawnPlayer() {
+        x = startingX + (int) (Math.random() * (1300 - 500) - 100);
+        y = startingY - 500;
+        health = 100;
+    }
+
+    public void takeDamage(int amount) {
         health -= amount;
         if (health <= 0) {
         }

@@ -15,7 +15,7 @@ public class GameWindow extends JFrame {
         gPanel.setBackground(Color.lightGray);
         gPanel.setVisible(true);
         this.add(gPanel);
-        KeyInput keyChecker = gPanel.getKeyChecker();
+        KeyInput keyChecker = gPanel.getKeychecker();
         addKeyListener(keyChecker);
 
     }

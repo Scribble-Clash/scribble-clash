@@ -30,4 +30,16 @@ public class Loader {
         }
         return image;
     }
+
+    public Image mainimage(String imagePath) {
+        InputStream is = getClass().getResourceAsStream(imagePath);
+        Image image = null;
+        try {
+            image = ImageIO.read(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+
 }

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import animation.Animated;
+import animation.AnimationManager;
 import controller.Loader;
 import entity.DummyEnemy;
 import views.GamePanel;
@@ -16,14 +17,17 @@ public class Sword extends Weapon {
     BufferedImage image;
     Loader load = new Loader();
     Animated animated = new Animated();
+    private AnimationManager animationManager;
 
     public Sword(int x, int y, int damage, GamePanel panel) {
         super(x, y);
         this.panel = panel;
         image = (BufferedImage) load.mainimage();
-        this.img = image.getSubimage(448, 0, 64, 64); // Make sure img is properly assigned
+        this.img = image.getSubimage(448, 0, 64, 64);
         this.hitbox = new Rectangle(x, y, this.img.getWidth(this.getPanel()), this.img.getHeight(this.getPanel()));
         this.damage = damage;
+        this.animationManager = new AnimationManager(panel);
+
     }
 
     // setter and getter
@@ -51,13 +55,13 @@ public class Sword extends Weapon {
 
     @Override
     public void attack() {
-        animation = animated.swingAnimation();
+        this.animation = animated.swingAnimation();
         totalFrames = animation.length;
         isAttacking = true;
         boolean isFacingLeft = panel.getPlayer().isFacingLeft();
         if (isFacingLeft) {
             for (int i = 1; i < totalFrames; i++) {
-                animation[i] = animated.flipImageHorizontally(animation[i]);
+                animation[i] = animated.flipImageVertically(animation[i]);
             }
             isFacingLeft = false;
         }
@@ -71,22 +75,58 @@ public class Sword extends Weapon {
                 img = animation[i];
                 panel.repaint();
             }
-            hit(getDummyEnemyReference(), this.damage);
+            hit(getDummyEnemyReference(), 1);
             img = animation[0];
             isAttacking = false;
-            resetHitbox();
         });
         animationThread.start();
     }
 
     @Override
     public void specialattack() {
+        this.animation = animated.specialswordanimation();
+        isAttacking = true;
+        totalFrames = animation.length;
+        if (panel.getPlayer().isFacingLeft()) {
+            panel.getPlayer().setDashLeft(true);
+        } else {
+            panel.getPlayer().setDashRight(true);
+        }
+        Thread animationThread = new Thread(() -> {
+            for (int i = 0; i < totalFrames; i++) {
+                try {
+                    Thread.sleep(80);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                img = animation[i];
+                hit(getDummyEnemyReference(), 10);
+            }
+            img = animation[0];
 
+            isAttacking = false;
+            resetHitbox();
+            panel.repaint();
+        });
+
+        animationThread.start();
     }
 
     // other method
     private void resetHitbox() {
         this.hitbox = new Rectangle(x, y, this.img.getWidth(this.getPanel()), this.img.getHeight(this.getPanel()));
+    }
+
+    public void charge1() {
+        if (!animationManager.isAnimating()) {
+            animationManager.charge1();
+        }
+    }
+
+    public void charge2() {
+        if (!animationManager.isAnimating()) {
+            animationManager.charge2();
+        }
     }
 
     @Override
