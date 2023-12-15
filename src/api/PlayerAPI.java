@@ -1,21 +1,27 @@
 package api;
 
 import com.google.firebase.database.*;
-import data.staticPos;
-import entity.Player;
 
-public class Position {
-    public int x;
-    public int y;
+public class PlayerAPI {
+    private String roomCode;
+    private String username;
 
-    public Position() {
+    public int posX = 0;
+    public int posY = 0;
+    public int handX = 0;
+    public int handY = 0;
+    public int health = 0;
+    public int weapon = 0;
 
+    public PlayerAPI(String roomCode, String username) {
+        this.roomCode = roomCode;
+        this.username = username;
+        listenPos();
     }
 
-    public Position(String roomCode, String username, int x, int y) {
-        this.x = x;
-        this.y = y;
-
+    public void setPosition(int posX, int posY) {
+        this.posX = posX;
+        this.posY = posY;
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
@@ -23,14 +29,14 @@ public class Position {
         positionRef.setValueAsync(this);
     }
 
-    public static void listenPos(String roomCode, String username, Player player) {
+    public void listenPos() {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
         ref.child(roomCode).child(username).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Position pos = dataSnapshot.getValue(Position.class);
-                player.setPosition(pos.x, pos.y);
+                PlayerAPI pos = dataSnapshot.getValue(PlayerAPI.class);
+                setPosition( posX, posY);
             }
 
             @Override

@@ -3,9 +3,7 @@ package entity;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
-import java.util.UUID;
 
-import api.Position;
 import controller.Loader;
 import entity.Weapon.*;
 import views.GamePanel;
@@ -264,6 +262,7 @@ public class Player extends Entity {
         hitbox.x = x;
         hitbox.y = y;
 
+        data.Players.getData(0).setPosition( x, y);
     }
 
     public void setPosition (int x, int y) {

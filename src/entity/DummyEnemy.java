@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 import animation.AnimationManager;
 import controller.Loader;
-import data.staticPos;
 import views.GamePanel;
 
 public class DummyEnemy extends Entity {

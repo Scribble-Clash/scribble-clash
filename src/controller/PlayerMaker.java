@@ -3,9 +3,8 @@ package controller;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.UUID;
 
-import api.Position;
+import api.PlayerAPI;
 import entity.Player;
 import views.GamePanel;
 
@@ -21,24 +20,25 @@ public class PlayerMaker {
 
 //        UUID uuid = UUID.randomUUID();
 //        String id = uuid.toString();
-        String id = "saya";
+        String id = "player1";
 
         Player player = new Player(x, y, 1, panel, "ABCD", id);
-
-        new Position("ABCD", id, x, y);
+        PlayerAPI playerAPI = new PlayerAPI("ABCD", "player1");
+        data.Players.addData(playerAPI);
         return player;
     }
 
     public Player addPlayer(int x, int y, GamePanel panel) {
 //        UUID uuid = UUID.randomUUID();
 //        String id = uuid.toString();
-        String id = "Singgih";
+        String id = "saya";
         Player player = new Player(x, y, 1, panel, "ABCD", id);
-        Position.listenPos("ABCD", id, player);
+        PlayerAPI playerAPI = new PlayerAPI("ABCD", "player2");
+        data.Players.addData(playerAPI);
         return player;
     }
 
-    public ArrayList<Player> getPlayers() {
+    public ArrayList<entity.Player> getPlayers() {
         return players;
     }
 
