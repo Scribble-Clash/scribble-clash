@@ -61,7 +61,7 @@ public class Sword extends Weapon {
         boolean isFacingLeft = panel.getPlayer().isFacingLeft();
         if (isFacingLeft) {
             for (int i = 1; i < totalFrames; i++) {
-                animation[i] = animated.flipImageVertically(animation[i]);
+                animation[i] = animated.flipImageHorizontally(animation[i]);
             }
             isFacingLeft = false;
         }
