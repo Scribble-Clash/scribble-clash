@@ -262,13 +262,26 @@ public class Player extends Entity {
         hitbox.x = x;
         hitbox.y = y;
 
-        data.Players.getData(0).setPosition( x, y);
+        data.Players.getData(0).setPlayerPosition( x, y);
     }
 
-    public void setPosition (int x, int y) {
+    public void setXPosition (int x) {
         this.x = x;
+    }
+
+    public void setYPosition (int y) {
         this.y = y;
     }
+
+    public void setHandXPosition (int x) {
+        getHand().setPosition(x, getHand().getY());
+    }
+
+    public void setHandYPosition (int y) {
+        getHand().setPosition(getHand().getX(), y);
+    }
+
+
 
     @Override
     public void draw(Graphics2D gtd) {
@@ -333,6 +346,7 @@ public class Player extends Entity {
         handY = Math.min(Math.max(handY, playerY - maxY), playerY + maxY);
 
         getHand().updatePosition(handX, handY);
+        data.Players.getData(0).setHandPosition(handX, handY);
     }
 
     private Image flipImageHorizontally(Image img) {
