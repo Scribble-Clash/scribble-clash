@@ -289,7 +289,7 @@ public class Player extends Entity {
 
         if (!data.Players.isEmpty() && this.id.equals(Multiplayer.id)) {
             Players.getData(Multiplayer.id).setPlayerPosition(x, y);
-            Players.getData(Multiplayer.id).setSpeed(xspeed,yspeed);
+            Players.getData(Multiplayer.id).setFacing(facingLeft);
         }
     }
 

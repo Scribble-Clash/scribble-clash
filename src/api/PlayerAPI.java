@@ -145,9 +145,8 @@ public class PlayerAPI {
         });
     }
 
-    public void setSpeed(Double speedX, Double speedY) {
-        this.speedX = speedX;
-        this.speedY = speedY;
+    public void setFacing(Boolean facingLeft) {
+        this.facingLeft = facingLeft;
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
