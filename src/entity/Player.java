@@ -36,6 +36,10 @@ public class Player extends Entity {
     private double knockbackX;
     AnimationManager animationManager;
 
+    public String getId() {
+        return id;
+    }
+
     public Player(int x, int y, int colorId, GamePanel panel, String roomCode, String playerId) {
         super(x, y);
 
@@ -62,7 +66,7 @@ public class Player extends Entity {
         startingY = y;
 
         new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
-        heldWeapon = new Sword(x + width, y + height, 10, this.panel);
+        heldWeapon = new Sword(x + width, y + height, 10, this.id, this.panel);
 
         // generate string random 6 character
         // roomCode = new StringBuilder();

@@ -6,11 +6,13 @@ import java.awt.image.BufferedImage;
 import animation.Animated;
 import animation.AnimationManager;
 import controller.Loader;
+import data.Multiplayer;
 import entity.DummyEnemy;
 import entity.Player;
 import views.GamePanel;
 
 public class Sword extends Weapon {
+    public String userId;
     private BufferedImage[] animation;
     private int totalFrames;
     private int damage;
@@ -20,8 +22,9 @@ public class Sword extends Weapon {
     Animated animated = new Animated();
     private AnimationManager animationManager;
 
-    public Sword(int x, int y, int damage, GamePanel panel) {
+    public Sword(int x, int y, int damage, String userId, GamePanel panel) {
         super(x, y);
+        this.userId = userId;
         this.panel = panel;
         image = (BufferedImage) load.mainimage();
         this.img = image.getSubimage(448, 0, 64, 64);
@@ -37,10 +40,10 @@ public class Sword extends Weapon {
     }
 
     private Player getPlayerReference() {
-        if (data.Players.getPlayerdata(0).equals(this.getPanel().getPlayer())) {
-            return null;
+        if (!data.Players.getPlayerdata(0).getId().equals(this.userId)) {
+            return this.getPanel().getPlayer();
         }
-        return this.getPanel().getPlayer();
+        return null;
     }
 
     public int getDamage() {
