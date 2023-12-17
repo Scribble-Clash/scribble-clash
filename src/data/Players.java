@@ -17,8 +17,13 @@ public class Players {
         playerdata.add(player);
     }
 
-    public static PlayerAPI getData(int index) {
-        return data.get(index);
+    public static PlayerAPI getData(String id) {
+        for (PlayerAPI player : data) {
+            if (player.getId().equals(id)) {
+                return player;
+            }
+        }
+        return null;
     }
 
     public static void addData(PlayerAPI player) {

@@ -5,7 +5,7 @@ import entity.Player;
 
 public class PlayerAPI {
     private String roomCode;
-    private String username;
+    private String id;
 
     public int posX = 0;
     public int posY = 0;
@@ -13,16 +13,21 @@ public class PlayerAPI {
     public int handY = 0;
     public int health = 100;
     public int weapon = 0;
+    public int hit = 0;
     public int charge = 0;
 
     public PlayerAPI() {
     }
 
-    public PlayerAPI(String roomCode, String username) {
+    public PlayerAPI(String roomCode, String id) {
         this.roomCode = roomCode;
-        this.username = username;
+        this.id = id;
         setHealth(100);
 //        listenPos();
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setPlayerPosition(int posX, int posY) {
@@ -31,13 +36,13 @@ public class PlayerAPI {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference positionRef = ref.child(roomCode).child(username);
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
         positionRef.setValueAsync(this);
     }
 
     public void listenPlayerData(Player player) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference().child(roomCode).child(username);
+        DatabaseReference ref = database.getReference().child(roomCode).child(id);
         ref.child("posX").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -97,7 +102,7 @@ public class PlayerAPI {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Integer health = dataSnapshot.getValue(Integer.class);
-                player.setHealth(health);
+                player.setFirebaseHealth(health);
             }
 
             @Override
@@ -105,6 +110,24 @@ public class PlayerAPI {
 
             }
 
+        });
+        ref.child("hit").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer hit = dataSnapshot.getValue(Integer.class);
+                System.out.println(hit);
+                if (hit == 1)
+                    if (player.getHeldWeapon() == null) {
+                        player.getHand().attack();
+                    } else {
+                        player.getHeldWeapon().attack();
+                    }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         });
 
     }
@@ -115,7 +138,7 @@ public class PlayerAPI {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference positionRef = ref.child(roomCode).child(username);
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
         positionRef.setValueAsync(this);
     }
 
@@ -124,7 +147,16 @@ public class PlayerAPI {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference positionRef = ref.child(roomCode).child(username);
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
+        positionRef.setValueAsync(this);
+    }
+
+    public void setHit(int hit) {
+        this.hit = hit;
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference();
+
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
         positionRef.setValueAsync(this);
     }
 }
