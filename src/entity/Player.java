@@ -106,9 +106,13 @@ public class Player extends Entity {
     }
 
     public void setHealth(int health) {
-        if (!data.Players.isEmpty() && Objects.equals(Multiplayer.id, this.id)) {
+        if (!data.Players.isEmpty()) {
             this.health = health;
-            Players.getData(Multiplayer.id).setHealth(health);
+            // assert not null
+            if (Players.getData(this.id) != null)
+                Players.getData(this.id).setHealth(health);
+        } else {
+            this.health = health;
         }
     }
 
@@ -284,8 +288,8 @@ public class Player extends Entity {
         hitbox.x = x;
         hitbox.y = y;
 
-        if (!data.Players.isEmpty() && Objects.equals(Multiplayer.id, this.id)) {
-            Players.getData(Multiplayer.id).setPlayerPosition(x, y);
+        if (!data.Players.isEmpty()) {
+            Players.getData(this.id).setPlayerPosition(x, y);
         }
     }
 
