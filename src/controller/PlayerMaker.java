@@ -32,7 +32,7 @@ public class PlayerMaker {
     public Player addPlayer(int x, int y, GamePanel panel) {
         // UUID uuid = UUID.randomUUID();
         // String id = uuid.toString();
-        String id = "player1";
+        String id = "player2";
         Player player = new Player(x, y, 1, panel, "ABCD", id);
         PlayerAPI playerAPI = new PlayerAPI("ABCD", id);
         playerAPI.listenPlayerData(player);

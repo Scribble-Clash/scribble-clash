@@ -106,9 +106,8 @@ public class Player extends Entity {
     }
 
     public void setHealth(int health) {
-        if (!data.Players.isEmpty()) {
+        if (!data.Players.isEmpty() && this.id.equals(Multiplayer.id)) {
             this.health = health;
-            // assert not null
             if (Players.getData(this.id) != null)
                 Players.getData(this.id).setHealth(health);
         } else {
@@ -288,7 +287,7 @@ public class Player extends Entity {
         hitbox.x = x;
         hitbox.y = y;
 
-        if (!data.Players.isEmpty()) {
+        if (!data.Players.isEmpty() && this.id.equals(Multiplayer.id)) {
             Players.getData(this.id).setPlayerPosition(x, y);
         }
     }
