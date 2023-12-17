@@ -12,7 +12,7 @@ public class PlayerAPI {
     public int handX = 0;
     public int handY = 0;
     public int health = 100;
-    public boolean facingLeft;
+    public Double speedX;
     public int weapon = 0;
     public int hit = 0;
     public int charge = 0;
@@ -131,11 +131,11 @@ public class PlayerAPI {
             }
         });
 
-        ref.child("facingLeft").addValueEventListener(new ValueEventListener() {
+        ref.child("speedX").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Boolean facing = dataSnapshot.getValue(Boolean.class);
-                player.setFacing(facing);
+                Double speedX = dataSnapshot.getValue(Double.class);
+                player.setSpeedX(PlayerAPI.this.speedX);
             }
 
             @Override
@@ -145,8 +145,8 @@ public class PlayerAPI {
         });
     }
 
-    public void setFacing(Boolean facingLeft) {
-        this.facingLeft = facingLeft;
+    public void setSpeedX(Double speedX) {
+        this.speedX = speedX;
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
