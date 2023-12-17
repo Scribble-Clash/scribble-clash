@@ -4,10 +4,14 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 
+import controller.Loader;
 import entity.Weapon.*;
 import views.GamePanel;
 
 public class Player extends Entity {
+    String id;
+    // generate 4 length string
+    String roomCode;
     private boolean keyLeft;
     private boolean keyRight;
     private boolean keyDown;
@@ -26,8 +30,18 @@ public class Player extends Entity {
     private int startingX;
     private int startingY;
 
-    public Player(int x, int y, Image img, Image handImage, GamePanel panel) {
+    public Player(int x, int y, int colorId, GamePanel panel, String roomCode, String playerId) {
         super(x, y);
+
+        this.id = playerId;
+        BufferedImage sprites = (BufferedImage) new Loader().mainimage();
+        switch (colorId) {
+            case 1:
+                this.img = sprites.getSubimage(576, 448, 64, 64);
+                this.hand = new Hand(x + width, y + height, sprites.getSubimage(640, 0, 64, 64), this.panel);
+            case 2:
+        }
+
         this.panel = panel;
         this.img = img;
         width = img.getWidth(panel);
@@ -41,9 +55,19 @@ public class Player extends Entity {
         startingX = x;
         startingY = y;
 
-        hand = new Hand(x + width, y + height, handImage, this.panel);
         new Rectangle(hand.getX(), hand.getY(), hand.getWidth(), hand.getHeight());
         heldWeapon = new Sword(x + width, y + height, 10, this.panel);
+
+        // generate string random 6 character
+//        roomCode = new StringBuilder();
+//        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+//        int length = 6;
+//        for (int i = 0; i < length; i++) {
+//            int index = (int) (Math.random() * characters.length());
+//            roomCode.append(characters.charAt(index));
+//        }
+
+        this.roomCode = roomCode;
     }
 
     // setter and getter
@@ -77,6 +101,9 @@ public class Player extends Entity {
 
     public void setHealth(int health) {
         this.health = health;
+        if (!data.Players.isEmpty()) {
+            data.Players.getData(0).setHealth(health);
+        }
     }
 
     public void setLives(int lives) {
@@ -235,11 +262,28 @@ public class Player extends Entity {
         // Pembaruan posisi
         x += xspeed;
         y += yspeed;
-
         hitbox.x = x;
         hitbox.y = y;
 
+        data.Players.getData(0).setPlayerPosition(x, y);
     }
+
+    public void setXPosition(int x) {
+        this.x = x;
+    }
+
+    public void setYPosition(int y) {
+        this.y = y;
+    }
+
+    public void setHandXPosition(int x) {
+        getHand().setPosition(x, getHand().getY());
+    }
+
+    public void setHandYPosition(int y) {
+        getHand().setPosition(getHand().getX(), y);
+    }
+
 
     @Override
     public void draw(Graphics2D gtd) {
@@ -265,11 +309,11 @@ public class Player extends Entity {
     private void respawnPlayer() {
         x = startingX + (int) (Math.random() * (1300 - 500) - 100);
         y = startingY - 500;
-        health = 100;
+        setHealth(100);
     }
 
     public void takeDamage(int amount) {
-        health -= amount;
+        setHealth(health - amount);
         if (health <= 0) {
         }
     }
@@ -304,6 +348,7 @@ public class Player extends Entity {
         handY = Math.min(Math.max(handY, playerY - maxY), playerY + maxY);
 
         getHand().updatePosition(handX, handY);
+        data.Players.getData(0).setHandPosition(handX, handY);
     }
 
     private Image flipImageHorizontally(Image img) {
