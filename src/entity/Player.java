@@ -293,8 +293,12 @@ public class Player extends Entity {
         }
     }
 
-    public void setSpeedX(Double xspeed) {
-        this.xspeed = xspeed;
+    public void setImg(Double xspeed) {
+        if (xspeed < 0) {
+            img = flipImageHorizontally(originalImg);
+        } else if (xspeed > 0) {
+            img = originalImg;
+        }
     }
 
     public void setXPosition(int x) {

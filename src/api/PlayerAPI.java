@@ -135,7 +135,7 @@ public class PlayerAPI {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Double speedX = dataSnapshot.getValue(Double.class);
-                player.setSpeedX(speedX);
+                player.setImg(speedX);
             }
 
             @Override
