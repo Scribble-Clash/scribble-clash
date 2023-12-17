@@ -289,7 +289,16 @@ public class Player extends Entity {
 
         if (!data.Players.isEmpty() && this.id.equals(Multiplayer.id)) {
             Players.getData(Multiplayer.id).setPlayerPosition(x, y);
+            Players.getData(Multiplayer.id).setSpeed(xspeed,yspeed);
         }
+    }
+
+    public void setXSpeed (Double xSpeed) {
+        this.xspeed = xSpeed;
+    }
+
+    public void setYSpeed (Double ySpeed) {
+        this.yspeed = ySpeed;
     }
 
     public void setXPosition(int x) {
