@@ -12,6 +12,7 @@ public class PlayerAPI {
     public int handX = 0;
     public int handY = 0;
     public int health = 100;
+    public Double speedX;
     public int weapon = 0;
     public int hit = 0;
     public int charge = 0;
@@ -130,6 +131,27 @@ public class PlayerAPI {
             }
         });
 
+        ref.child("speedX").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Double speedX = dataSnapshot.getValue(Double.class);
+                player.setImg(speedX);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void setSpeedX(Double speedX) {
+        this.speedX = speedX;
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference();
+
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
+        positionRef.setValueAsync(this);
     }
 
     public void setHandPosition(int handX, int handY) {
