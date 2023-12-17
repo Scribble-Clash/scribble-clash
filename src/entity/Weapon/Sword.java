@@ -37,9 +37,9 @@ public class Sword extends Weapon {
     }
 
     private Player getPlayerReference() {
-        if (data.Players.getPlayerdata(0).equals(this.getPanel().getPlayer())) {
-            return null;
-        }
+//        if (data.Players.getPlayerdata(0).equals(this.getPanel().getPlayer())) {
+//            return null;
+//        }
         return this.getPanel().getPlayer();
     }
 

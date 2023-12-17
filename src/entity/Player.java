@@ -3,8 +3,11 @@ package entity;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
+import java.util.Objects;
 
 import controller.Loader;
+import data.Multiplayer;
+import data.Players;
 import entity.Weapon.*;
 import views.GamePanel;
 import animation.AnimationManager;
@@ -103,9 +106,9 @@ public class Player extends Entity {
     }
 
     public void setHealth(int health) {
-        this.health = health;
-        if (!data.Players.isEmpty()) {
-            data.Players.getData(0).setHealth(health);
+        if (!data.Players.isEmpty() && Objects.equals(Multiplayer.id, this.id)) {
+            this.health = health;
+            Players.getData(Multiplayer.id).setHealth(health);
         }
     }
 
@@ -281,7 +284,9 @@ public class Player extends Entity {
         hitbox.x = x;
         hitbox.y = y;
 
-        data.Players.getData(0).setPlayerPosition(x, y);
+        if (!data.Players.isEmpty() && Objects.equals(Multiplayer.id, this.id)) {
+            Players.getData(Multiplayer.id).setPlayerPosition(x, y);
+        }
     }
 
     public void setXPosition(int x) {
@@ -386,7 +391,9 @@ public class Player extends Entity {
         handY = Math.min(Math.max(handY, playerY - maxY), playerY + maxY);
 
         getHand().updatePosition(handX, handY);
-        data.Players.getData(0).setHandPosition(handX, handY);
+        if (!data.Players.isEmpty() && Objects.equals(Multiplayer.id, this.id)) {
+            Players.getData(Multiplayer.id).setHandPosition(handX, handY);
+        }
     }
 
     private Image flipImageHorizontally(Image img) {

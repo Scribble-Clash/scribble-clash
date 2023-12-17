@@ -2,6 +2,8 @@ package controller;
 
 import java.awt.event.*;
 
+import data.Multiplayer;
+import data.Players;
 import entity.Player;
 import entity.Weapon.Sword;
 
@@ -61,7 +63,7 @@ public class MouseInput implements MouseListener, MouseMotionListener {
 
     public void mouseClicked(MouseEvent e) {
         if (isMouseInside) {
-            data.Players.getData(0).setHit(1);
+            Players.getData(Multiplayer.id).setHit(1);
             if (player.getHeldWeapon() == null) {
                 player.getHand().attack();
                 updateHandPosition(e.getX(), e.getY());
@@ -69,7 +71,7 @@ public class MouseInput implements MouseListener, MouseMotionListener {
                 updateHandPosition(e.getX(), e.getY());
                 player.getHeldWeapon().attack();
             }
-            data.Players.getData(0).setHit(0);
+            Players.getData(Multiplayer.id).setHit(0);
         }
     }
 

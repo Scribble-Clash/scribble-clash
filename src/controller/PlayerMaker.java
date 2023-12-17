@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import api.PlayerAPI;
+import data.Multiplayer;
 import entity.Player;
 import views.GamePanel;
 
@@ -18,10 +19,9 @@ public class PlayerMaker {
 
         // UUID uuid = UUID.randomUUID();
         // String id = uuid.toString();
-        String id = "player1";
 
-        Player player = new Player(x, y, 1, panel, "ABCD", id);
-        PlayerAPI playerAPI = new PlayerAPI("ABCD", id);
+        Player player = new Player(x, y, 1, panel, "ABCD", Multiplayer.id);
+        PlayerAPI playerAPI = new PlayerAPI("ABCD", Multiplayer.id);
         playerAPI.listenPlayerData(player);
         data.Players.addData(playerAPI);
         data.Players.addPlayerdata(player);

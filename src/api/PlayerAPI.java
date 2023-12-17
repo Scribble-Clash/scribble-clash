@@ -5,7 +5,7 @@ import entity.Player;
 
 public class PlayerAPI {
     private String roomCode;
-    private String username;
+    private String id;
 
     public int posX = 0;
     public int posY = 0;
@@ -19,11 +19,15 @@ public class PlayerAPI {
     public PlayerAPI() {
     }
 
-    public PlayerAPI(String roomCode, String username) {
+    public PlayerAPI(String roomCode, String id) {
         this.roomCode = roomCode;
-        this.username = username;
+        this.id = id;
         setHealth(100);
 //        listenPos();
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setPlayerPosition(int posX, int posY) {
@@ -32,13 +36,13 @@ public class PlayerAPI {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference positionRef = ref.child(roomCode).child(username);
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
         positionRef.setValueAsync(this);
     }
 
     public void listenPlayerData(Player player) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference().child(roomCode).child(username);
+        DatabaseReference ref = database.getReference().child(roomCode).child(id);
         ref.child("posX").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -134,7 +138,7 @@ public class PlayerAPI {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference positionRef = ref.child(roomCode).child(username);
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
         positionRef.setValueAsync(this);
     }
 
@@ -143,7 +147,7 @@ public class PlayerAPI {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference positionRef = ref.child(roomCode).child(username);
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
         positionRef.setValueAsync(this);
     }
 
@@ -152,7 +156,7 @@ public class PlayerAPI {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference positionRef = ref.child(roomCode).child(username);
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
         positionRef.setValueAsync(this);
     }
 }
