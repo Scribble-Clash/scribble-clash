@@ -105,7 +105,7 @@ public class Player extends Entity {
         return health;
     }
 
-    public void setFirebaseHealth (int health) {
+    public void setFirebaseHealth(int health) {
         this.health = health;
     }
 
@@ -281,6 +281,7 @@ public class Player extends Entity {
         } else if (knockbackX < 0) {
             knockbackX += 0.5;
         }
+        x += (int) knockbackX;
         // Pembaruan posisi
         x += xspeed;
         y += yspeed;
