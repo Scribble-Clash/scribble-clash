@@ -12,8 +12,7 @@ public class PlayerAPI {
     public int handX = 0;
     public int handY = 0;
     public int health = 100;
-    public Double speedX = 0.0;
-    public Double speedY = 0.0;
+    public boolean facingLeft;
     public int weapon = 0;
     public int hit = 0;
     public int charge = 0;
@@ -132,24 +131,11 @@ public class PlayerAPI {
             }
         });
 
-        ref.child("speedX").addValueEventListener(new ValueEventListener() {
+        ref.child("facingLeft").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Double speed = dataSnapshot.getValue(Double.class);
-                player.setXSpeed(speed);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        ref.child("speedY").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Double speed = dataSnapshot.getValue(Double.class);
-                player.setYSpeed(speed);
+                Boolean facing = dataSnapshot.getValue(Boolean.class);
+                player.setFacing(facing);
             }
 
             @Override

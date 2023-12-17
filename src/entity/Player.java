@@ -293,12 +293,8 @@ public class Player extends Entity {
         }
     }
 
-    public void setXSpeed (Double xSpeed) {
-        this.xspeed = xSpeed;
-    }
-
-    public void setYSpeed (Double ySpeed) {
-        this.yspeed = ySpeed;
+    public void setFacing(Boolean facingLeft) {
+        this.facingLeft = facingLeft;
     }
 
     public void setXPosition(int x) {
