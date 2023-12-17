@@ -288,7 +288,7 @@ public class Player extends Entity {
         hitbox.y = y;
 
         if (!data.Players.isEmpty() && this.id.equals(Multiplayer.id)) {
-            Players.getData(this.id).setPlayerPosition(x, y);
+            Players.getData(Multiplayer.id).setPlayerPosition(x, y);
         }
     }
 
