@@ -15,8 +15,6 @@ public class PlayerMaker {
     public Player createPlayer(int x, int y, GamePanel panel) {
         Loader load = new Loader();
         image = (BufferedImage) load.mainimage();
-        Image bodyimg = image.getSubimage(576, 128, 64, 64);
-        Image handimg = image.getSubimage(640, 0, 64, 64);
 
 //        UUID uuid = UUID.randomUUID();
 //        String id = uuid.toString();

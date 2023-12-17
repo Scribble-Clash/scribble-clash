@@ -38,7 +38,7 @@ public class Player extends Entity {
         switch (colorId) {
             case 1:
                 this.img = sprites.getSubimage(576, 448, 64, 64);
-                this.hand= new Hand(x + width, y + height, sprites.getSubimage(640,0,64,64), this.panel);
+                this.hand = new Hand(x + width, y + height, sprites.getSubimage(640, 0, 64, 64), this.panel);
             case 2:
         }
 
@@ -101,6 +101,9 @@ public class Player extends Entity {
 
     public void setHealth(int health) {
         this.health = health;
+        if (!data.Players.isEmpty()) {
+            data.Players.getData(0).setHealth(health);
+        }
     }
 
     public void setLives(int lives) {
@@ -262,25 +265,24 @@ public class Player extends Entity {
         hitbox.x = x;
         hitbox.y = y;
 
-        data.Players.getData(0).setPlayerPosition( x, y);
+        data.Players.getData(0).setPlayerPosition(x, y);
     }
 
-    public void setXPosition (int x) {
+    public void setXPosition(int x) {
         this.x = x;
     }
 
-    public void setYPosition (int y) {
+    public void setYPosition(int y) {
         this.y = y;
     }
 
-    public void setHandXPosition (int x) {
+    public void setHandXPosition(int x) {
         getHand().setPosition(x, getHand().getY());
     }
 
-    public void setHandYPosition (int y) {
+    public void setHandYPosition(int y) {
         getHand().setPosition(getHand().getX(), y);
     }
-
 
 
     @Override
@@ -307,11 +309,11 @@ public class Player extends Entity {
     private void respawnPlayer() {
         x = startingX + (int) (Math.random() * (1300 - 500) - 100);
         y = startingY - 500;
-        health = 100;
+        setHealth(100);
     }
 
     public void takeDamage(int amount) {
-        health -= amount;
+        setHealth(health - amount);
         if (health <= 0) {
         }
     }

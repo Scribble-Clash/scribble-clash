@@ -13,4 +13,12 @@ public class Players {
     public static void addData(PlayerAPI player) {
         data.add(player);
     }
+
+    public static void removeData(PlayerAPI player) {
+        data.remove(player);
+    }
+
+    public static boolean isEmpty() {
+        return data.isEmpty();
+    }
 }

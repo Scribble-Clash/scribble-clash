@@ -11,8 +11,9 @@ public class PlayerAPI {
     public int posY = 0;
     public int handX = 0;
     public int handY = 0;
-    public int health = 0;
+    public int health = 100;
     public int weapon = 0;
+    public int charge = 0;
 
     public PlayerAPI() {
     }
@@ -20,6 +21,7 @@ public class PlayerAPI {
     public PlayerAPI(String roomCode, String username) {
         this.roomCode = roomCode;
         this.username = username;
+        setHealth(100);
 //        listenPos();
     }
 
