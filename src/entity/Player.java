@@ -105,13 +105,13 @@ public class Player extends Entity {
         return health;
     }
 
+    public void setFirebaseHealth (int health) {
+        this.health = health;
+    }
+
     public void setHealth(int health) {
-        if (!data.Players.isEmpty() && this.id.equals(Multiplayer.id)) {
-            this.health = health;
-            if (Players.getData(this.id) != null)
-                Players.getData(this.id).setHealth(health);
-        } else {
-            this.health = health;
+        if (this.id.equals(Multiplayer.id) && Players.getData(this.id) != null) {
+            Players.getData(this.id).setHealth(health);
         }
     }
 
@@ -327,7 +327,7 @@ public class Player extends Entity {
         hand.draw(gtd);
     }
 
-    // other method
+// other method
 
     private void respawnPlayer() {
         x = startingX + (int) (Math.random() * (1300 - 500) - 100);

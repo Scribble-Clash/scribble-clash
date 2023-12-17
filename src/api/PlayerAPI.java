@@ -102,7 +102,7 @@ public class PlayerAPI {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Integer health = dataSnapshot.getValue(Integer.class);
-                player.setHealth(health);
+                player.setFirebaseHealth(health);
             }
 
             @Override
