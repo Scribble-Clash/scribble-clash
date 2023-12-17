@@ -13,6 +13,7 @@ public class PlayerAPI {
     public int handY = 0;
     public int health = 100;
     public int weapon = 0;
+    public int hit = 0;
     public int charge = 0;
 
     public PlayerAPI() {
@@ -106,6 +107,24 @@ public class PlayerAPI {
             }
 
         });
+        ref.child("hit").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer hit = dataSnapshot.getValue(Integer.class);
+                System.out.println(hit);
+                if (hit == 1)
+                    if (player.getHeldWeapon() == null) {
+                        player.getHand().attack();
+                    } else {
+                        player.getHeldWeapon().attack();
+                    }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -121,6 +140,15 @@ public class PlayerAPI {
 
     public void setHealth(int health) {
         this.health = health;
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference();
+
+        DatabaseReference positionRef = ref.child(roomCode).child(username);
+        positionRef.setValueAsync(this);
+    }
+
+    public void setHit(int hit) {
+        this.hit = hit;
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
