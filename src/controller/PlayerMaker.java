@@ -16,25 +16,28 @@ public class PlayerMaker {
         Loader load = new Loader();
         image = (BufferedImage) load.mainimage();
 
-//        UUID uuid = UUID.randomUUID();
-//        String id = uuid.toString();
-        String id = "player2";
+        // UUID uuid = UUID.randomUUID();
+        // String id = uuid.toString();
+        String id = "player1";
 
         Player player = new Player(x, y, 1, panel, "ABCD", id);
         PlayerAPI playerAPI = new PlayerAPI("ABCD", id);
         playerAPI.listenPlayerData(player);
         data.Players.addData(playerAPI);
+        data.Players.addPlayerdata(player);
+
         return player;
     }
 
     public Player addPlayer(int x, int y, GamePanel panel) {
-//        UUID uuid = UUID.randomUUID();
-//        String id = uuid.toString();
-        String id = "player1";
+        // UUID uuid = UUID.randomUUID();
+        // String id = uuid.toString();
+        String id = "player2";
         Player player = new Player(x, y, 1, panel, "ABCD", id);
         PlayerAPI playerAPI = new PlayerAPI("ABCD", id);
         playerAPI.listenPlayerData(player);
         data.Players.addData(playerAPI);
+        data.Players.addPlayerdata(player);
         return player;
     }
 
