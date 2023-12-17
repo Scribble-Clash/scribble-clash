@@ -7,6 +7,7 @@ import animation.Animated;
 import animation.AnimationManager;
 import controller.Loader;
 import entity.DummyEnemy;
+import entity.Player;
 import views.GamePanel;
 
 public class Sword extends Weapon {
@@ -35,6 +36,13 @@ public class Sword extends Weapon {
         return this.getPanel().getDummyEnemy();
     }
 
+    private Player getPlayerReference() {
+        if (data.Players.getPlayerdata(0).equals(this.getPanel().getPlayer())) {
+            return null;
+        }
+        return this.getPanel().getPlayer();
+    }
+
     public int getDamage() {
         return damage;
     }
@@ -43,6 +51,18 @@ public class Sword extends Weapon {
 
     @Override
     public void hit(DummyEnemy enemy, int damage) {
+        Rectangle swordRect = new Rectangle(x, y, img.getWidth(null), img.getHeight(null));
+        Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+
+        if (swordRect.intersects(enemyRect) && isAttacking) {
+            boolean knockFromRight = panel.getPlayer().getX() > enemy.getX();
+            enemy.takeDamage(damage, knockFromRight);
+            isAttacking = false;
+        }
+    }
+
+    @Override
+    public void hit(Player enemy, int damage) {
         Rectangle swordRect = new Rectangle(x, y, img.getWidth(null), img.getHeight(null));
         Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
 
@@ -72,11 +92,11 @@ public class Sword extends Weapon {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                img = animation[i];
+                this.img = animation[i];
                 panel.repaint();
             }
-            hit(getDummyEnemyReference(), 1);
-            img = animation[0];
+            hit(getPlayerReference(), 1);
+            this.img = animation[0];
             isAttacking = false;
         });
         animationThread.start();
