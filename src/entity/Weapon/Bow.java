@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import controller.Loader;
 import entity.DummyEnemy;
+import entity.Player;
 
 public class Bow extends Weapon {
     BufferedImage image;
@@ -38,6 +39,12 @@ public class Bow extends Weapon {
     @Override
     public void specialattack() {
 
+    }
+
+    @Override
+    public void hit(Player enemy, int damage) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'hit'");
     }
 
 }

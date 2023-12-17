@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import animation.Animated;
 import animation.AnimationManager;
 import entity.DummyEnemy;
+import entity.Player;
 import views.GamePanel;
 
 public class Hand extends Weapon {
@@ -187,5 +188,11 @@ public class Hand extends Weapon {
         if (!animationManager.isAnimating()) {
             animationManager.charge2();
         }
+    }
+
+    @Override
+    public void hit(Player enemy, int damage) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'hit'");
     }
 }

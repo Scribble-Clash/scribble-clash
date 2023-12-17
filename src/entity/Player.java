@@ -7,6 +7,7 @@ import java.awt.image.*;
 import controller.Loader;
 import entity.Weapon.*;
 import views.GamePanel;
+import animation.AnimationManager;
 
 public class Player extends Entity {
     String id;
@@ -29,6 +30,8 @@ public class Player extends Entity {
     private boolean isDefeated = false;
     private int startingX;
     private int startingY;
+    private double knockbackX;
+    AnimationManager animationManager;
 
     public Player(int x, int y, int colorId, GamePanel panel, String roomCode, String playerId) {
         super(x, y);
@@ -59,13 +62,13 @@ public class Player extends Entity {
         heldWeapon = new Sword(x + width, y + height, 10, this.panel);
 
         // generate string random 6 character
-//        roomCode = new StringBuilder();
-//        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-//        int length = 6;
-//        for (int i = 0; i < length; i++) {
-//            int index = (int) (Math.random() * characters.length());
-//            roomCode.append(characters.charAt(index));
-//        }
+        // roomCode = new StringBuilder();
+        // String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        // int length = 6;
+        // for (int i = 0; i < length; i++) {
+        // int index = (int) (Math.random() * characters.length());
+        // roomCode.append(characters.charAt(index));
+        // }
 
         this.roomCode = roomCode;
     }
@@ -259,6 +262,19 @@ public class Player extends Entity {
                 isDefeated = true;
             }
         }
+
+        // knockback Logic
+        if (isDefeated) {
+            this.lives--;
+            if (this.lives >= 0) {
+                respawnPlayer();
+            }
+        }
+        if (knockbackX > 0) {
+            knockbackX -= 0.5;
+        } else if (knockbackX < 0) {
+            knockbackX += 0.5;
+        }
         // Pembaruan posisi
         x += xspeed;
         y += yspeed;
@@ -283,7 +299,6 @@ public class Player extends Entity {
     public void setHandYPosition(int y) {
         getHand().setPosition(getHand().getX(), y);
     }
-
 
     @Override
     public void draw(Graphics2D gtd) {
@@ -312,9 +327,32 @@ public class Player extends Entity {
         setHealth(100);
     }
 
-    public void takeDamage(int amount) {
-        setHealth(health - amount);
-        if (health <= 0) {
+    public void takeDamage(int damage, boolean knockFromRight) {
+        setHealth(health - damage);
+        if (health <= 0 && !isDefeated) {
+            isDefeated = true;
+            knockbackX = 0;
+            Loader load = new Loader();
+            BufferedImage image = (BufferedImage) load.mainimage();
+            img = image.getSubimage(384, 256, 64, 64);
+            width = img.getWidth(panel);
+            height = img.getHeight(panel);
+        } else {
+            if (!isDefeated) {
+                if (knockFromRight) {
+                    knockbackX = -10;
+                    blod();
+                } else {
+                    knockbackX = 10;
+                    blod();
+                }
+            }
+        }
+    }
+
+    public void blod() {
+        if (!animationManager.isAnimating()) {
+            animationManager.startBlodAnimation();
         }
     }
 

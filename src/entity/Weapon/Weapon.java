@@ -4,6 +4,7 @@ import java.awt.*;
 
 import entity.DummyEnemy;
 import entity.Entity;
+import entity.Player;
 
 public abstract class Weapon extends Entity {
     public Weapon(int x, int y) {
@@ -24,6 +25,8 @@ public abstract class Weapon extends Entity {
     public abstract void setPosition(int x, int y);
 
     public abstract void hit(DummyEnemy enemy, int damage);
+
+    public abstract void hit(Player enemy, int damage);
 
     public abstract void attack();
 
