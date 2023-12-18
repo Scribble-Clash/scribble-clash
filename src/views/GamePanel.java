@@ -12,12 +12,14 @@ import controller.Loader;
 import controller.MouseInput;
 import controller.PlayerMaker;
 import entity.BgrAssets;
+import data.Multiplayer;
 import entity.DummyEnemy;
 import entity.Player;
 import entity.Wall;
 
 public class GamePanel extends JPanel implements Runnable {
     private Player player;
+    private ArrayList<Player> otherPlayer = new ArrayList<>();
     private Thread gameThread;
     public ArrayList<Wall> walls = new ArrayList<>();
     public ArrayList<BgrAssets> asets = new ArrayList<>();
@@ -28,13 +30,19 @@ public class GamePanel extends JPanel implements Runnable {
     private JLabel healthLabel;
     private boolean isPaused = false;
     private volatile boolean running = true;
+    private boolean isDemo;
 
-    public GamePanel() {
+    public GamePanel(boolean isDemo) {
+        this.isDemo = isDemo;
         initComponents();
     }
 
     private void initComponents() {
         player = new PlayerMaker().createPlayer(500, 900, this);
+
+        for (int i = 2; i <= Multiplayer.numberOfPlayers; i++) {
+            otherPlayer.add(new PlayerMaker().addPlayer(500, 900, this, i));
+        }
         keychecker = new KeyInput(player);
         addKeyListener(keychecker);
 
@@ -48,13 +56,14 @@ public class GamePanel extends JPanel implements Runnable {
         asets = gameMap.getAssets();
 
         Loader load = new Loader();
-        BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
-        dummyEnemy = new DummyEnemy(900, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
+        if (isDemo) {
+            BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
+            dummyEnemy = new DummyEnemy(900, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
 
-        healthLabel = new JLabel("Health: " + dummyEnemy.getHealth());
-        healthLabel.setForeground(Color.RED);
-        add(healthLabel);
-
+            healthLabel = new JLabel("Health: " + dummyEnemy.getHealth());
+            healthLabel.setForeground(Color.RED);
+            add(healthLabel);
+        }
         gameThread = new Thread(this);
         gameThread.start();
 
@@ -73,7 +82,8 @@ public class GamePanel extends JPanel implements Runnable {
     public void run() {
         while (running) {
             player.set();
-            dummyEnemy.set();
+            if (isDemo)
+                dummyEnemy.set();
             if (mouseInput.isMouseInside()) {
                 player.updateHandPosition(mouseInput.getLastMouseX(), mouseInput.getLastMouseY());
             } else {
@@ -123,7 +133,11 @@ public class GamePanel extends JPanel implements Runnable {
         super.paint(g);
         Graphics2D gtd = (Graphics2D) g;
         player.draw(gtd);
-        dummyEnemy.draw(gtd);
+        if (isDemo)
+            dummyEnemy.draw(gtd);
+        for (Player otherPlayer : this.otherPlayer) {
+            otherPlayer.draw(gtd);
+        }
         for (Wall wall : walls) {
             wall.draw(gtd);
         }

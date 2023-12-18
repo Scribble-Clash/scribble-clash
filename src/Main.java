@@ -13,7 +13,7 @@ public class Main {
         GameWindow frame = new GameWindow();
         frame.setResizable(false);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setTitle("Scrabble-Fight-The-Game");
+        frame.setTitle("Scribble Clash");
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
