@@ -4,6 +4,7 @@ import com.google.firebase.database.*;
 import data.Multiplayer;
 import views.GamePanel;
 import views.GameWindow;
+import views.RoomPanel;
 
 import java.util.HashMap;
 
@@ -70,6 +71,7 @@ public class Room {
                 for (DataSnapshot player : dataSnapshot.getChildren()) {
                     Multiplayer.PlayerList.put(player.getKey(), player.getValue(Player.class).status);
                 }
+                RoomPanel.updatePlayerList();
             }
 
             @Override
