@@ -48,6 +48,7 @@ public class PlayerAPI {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Integer posX = dataSnapshot.getValue(Integer.class);
+                System.out.println("run");
                 player.setXPosition(posX);
             }
 
