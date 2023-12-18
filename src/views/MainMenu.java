@@ -22,7 +22,7 @@ public class MainMenu extends JPanel {
         JButton exitButton = createStyledButton("Exit");
 
         roomButton.addActionListener(e -> gameWindow.showJoinRoomPanel());
-        playDemoButton.addActionListener(e -> gameWindow.showGamePanel());
+        playDemoButton.addActionListener(e -> gameWindow.showGamePanel(true));
         exitButton.addActionListener(e -> System.exit(0));
 
         buttonPanel.add(roomButton, gbc);

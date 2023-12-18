@@ -1,5 +1,8 @@
 package views;
 
+import api.Room;
+import data.Multiplayer;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -35,6 +38,17 @@ public class JoinRoomPanel extends JPanel {
         playButton.addActionListener(e -> {
             String roomCode = roomCodeField.getText();
             if (!roomCode.isEmpty()) {
+                Room room = new Room(roomCode);
+                Multiplayer.numberOfPlayers = room.getPlayerList().size();
+                for (int i = 2; i <= 4; i++) {
+                    if (!room.isPlayerExist("player" + i)) {
+                        Multiplayer.roomCode = roomCode;
+                        room.addPlayer("player" + i, 0);
+                        Multiplayer.id = "player" + i;
+                        Multiplayer.status = 0;
+                        break;
+                    }
+                }
                 gameWindow.showRoomPanel(roomCode);
             } else {
                 JOptionPane.showMessageDialog(this, "Please enter a Room Code!");

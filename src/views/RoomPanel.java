@@ -1,5 +1,8 @@
 package views;
 
+import api.Room;
+import data.Multiplayer;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,7 +12,7 @@ public class RoomPanel extends JPanel {
     private DefaultListModel<String> userListModel;
     private JLabel roomLabel;
 
-    public RoomPanel(String roomLabelString) {
+    public RoomPanel(String roomLabelString, GameWindow gameWindow) {
         setLayout(new BorderLayout());
 
         // Create the room label
@@ -26,15 +29,23 @@ public class RoomPanel extends JPanel {
         userList = new JList<>(userListModel);
         add(new JScrollPane(userList), BorderLayout.EAST);
 
-        // Create the host button
-        JButton hostButton = new JButton("Host");
-        hostButton.addActionListener(e -> {
-            // Generate a random alphanumeric string of length 6
-            String roomCode = generateRoomCode(6);
-            roomCodeField.setText(roomCode);
-        });
+        String roomCode = generateRoomCode(6);
+        Room room = new Room(roomCode, "player1", 1);
+        room.listenStart(gameWindow);
+        Multiplayer.roomCode = roomCode;
+        Multiplayer.id = "player1";
+        Multiplayer.status = 1;
+        roomCodeField.setText(roomCode);
 
-        add(hostButton, BorderLayout.SOUTH);
+        // Create the host button
+        if (Multiplayer.status == 1) {
+            JButton hostButton = new JButton("Play");
+            hostButton.addActionListener(e -> {
+                room.getPlayerList();
+                room.setStart(true);
+            });
+            add(hostButton, BorderLayout.SOUTH);
+        }
     }
 
     // Method to generate a random alphanumeric string

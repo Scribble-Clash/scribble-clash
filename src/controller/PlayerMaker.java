@@ -20,8 +20,8 @@ public class PlayerMaker {
         // UUID uuid = UUID.randomUUID();
         // String id = uuid.toString();
 
-        Player player = new Player(x, y, 1, panel, "ABCD", Multiplayer.id);
-        PlayerAPI playerAPI = new PlayerAPI("ABCD", Multiplayer.id);
+        Player player = new Player(x, y, 1, panel, Multiplayer.roomCode, Multiplayer.id);
+        PlayerAPI playerAPI = new PlayerAPI(Multiplayer.roomCode, Multiplayer.id);
         playerAPI.listenPlayerData(player);
         data.Players.addData(playerAPI);
         data.Players.addPlayerdata(player);
@@ -29,12 +29,11 @@ public class PlayerMaker {
         return player;
     }
 
-    public Player addPlayer(int x, int y, GamePanel panel) {
+    public Player addPlayer(int x, int y, GamePanel panel, int numbers) {
         // UUID uuid = UUID.randomUUID();
         // String id = uuid.toString();
-        String id = "player1";
-        Player player = new Player(x, y, 1, panel, "ABCD", id);
-        PlayerAPI playerAPI = new PlayerAPI("ABCD", id);
+        Player player = new Player(x, y, 1, panel, Multiplayer.roomCode, "player" + numbers);
+        PlayerAPI playerAPI = new PlayerAPI(Multiplayer.roomCode, "players" + numbers);
         playerAPI.listenPlayerData(player);
         data.Players.addData(playerAPI);
         data.Players.addPlayerdata(player);
