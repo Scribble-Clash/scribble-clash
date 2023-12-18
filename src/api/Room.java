@@ -23,7 +23,7 @@ public class Room {
     }
 
     private String roomCode;
-    public boolean start = false;
+    private boolean start = false;
 
     public Room() {
     }
@@ -106,7 +106,6 @@ public class Room {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 start = dataSnapshot.getValue(Boolean.class);
-                System.out.println(start);
                 if (start) {
                     gameWindow.showGamePanel(false);
                 }

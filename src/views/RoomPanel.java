@@ -30,7 +30,7 @@ public class RoomPanel extends JPanel {
         if (mode == 1) {
             String roomCode = generateRoomCode(6);
             room = new Room(roomCode, "player1", 1);
-            roomCodeField.setText("Room Code: "+roomCode);
+            roomCodeField.setText("Room Code: " + roomCode);
             room.listenStart(gameWindow);
             Multiplayer.roomCode = roomCode;
             Multiplayer.id = "player1";
@@ -41,9 +41,6 @@ public class RoomPanel extends JPanel {
             hostButton.setBackground(Color.BLACK);
             hostButton.setForeground(Color.WHITE);
             hostButton.setBounds(1630, 960, 240, 80);
-
-
-
 
 
             hostButton.addActionListener(e -> {
@@ -61,8 +58,9 @@ public class RoomPanel extends JPanel {
             });
             add(hostButton);
         } else {
-            roomCodeField.setText("Room Code: "+Multiplayer.roomCode);
+            roomCodeField.setText("Room Code: " + Multiplayer.roomCode);
             room = new Room(Multiplayer.roomCode);
+            room.listenStart(gameWindow);
         }
         playerList.addAll(room.getPlayerList().keySet());
         // Create the host button
@@ -95,7 +93,6 @@ public class RoomPanel extends JPanel {
             playerPanel.add(playerLabel);
             playerListPanel.add(playerPanel);
         }
-
 
 
     }
