@@ -68,8 +68,6 @@ public class Room {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot player : dataSnapshot.getChildren()) {
-                    System.out.println(player.getKey());
-                    System.out.println(player.getValue(Player.class).status);
                     Multiplayer.PlayerList.put(player.getKey(), player.getValue(Player.class).status);
                 }
             }

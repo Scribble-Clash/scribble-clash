@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class RoomPanel extends JPanel {
     private JTextField roomCodeField;
 
-    private JPanel playerListPanel;
+    private static JPanel playerListPanel = new JPanel();
     private JLabel roomLabel;
     private ArrayList<String> playerList = new ArrayList<>();
 
@@ -72,29 +72,34 @@ public class RoomPanel extends JPanel {
         roomCodeField.setFont(new Font("Reach Story", Font.BOLD, 90));
         add(roomCodeField);
 
-        playerListPanel = new JPanel();
         playerListPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         playerListPanel.setBounds(550, 250, 750, 600);
         add(playerListPanel);
 
+        updatePlayerList();
+    }
+
+    public static void updatePlayerList() {
+        playerListPanel.removeAll();
         BufferedImage sprites = (BufferedImage) new Loader().mainimage();
         Image img = sprites.getSubimage(576, 448, 64, 64);
-        for (int i = 0; i < playerList.size(); i++) {
+        for (String player : Multiplayer.PlayerList.keySet()) {
+
             JPanel playerPanel = new JPanel();
             playerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
             playerPanel.setBackground(null);
             playerPanel.setPreferredSize(new Dimension(600, 100));
 
-            JLabel playerLabel = new JLabel(playerList.get(i));
+            JLabel playerLabel = new JLabel(player);
             playerLabel.setFont(new Font("Reach Story", Font.BOLD, 70));
 
             JLabel playerSprite = new JLabel(new ImageIcon(img.getScaledInstance(64, 64, Image.SCALE_SMOOTH)));
             playerPanel.add(playerSprite);
             playerPanel.add(playerLabel);
             playerListPanel.add(playerPanel);
+            playerListPanel.repaint();
+            playerListPanel.revalidate();
         }
-
-
     }
 
     // Method to generate a random alphanumeric string
