@@ -11,6 +11,7 @@ import controller.KeyInput;
 import controller.Loader;
 import controller.MouseInput;
 import controller.PlayerMaker;
+import entity.BgrAssets;
 import entity.DummyEnemy;
 import entity.Player;
 import entity.Wall;
@@ -19,6 +20,7 @@ public class GamePanel extends JPanel implements Runnable {
     private Player player;
     private Thread gameThread;
     public ArrayList<Wall> walls = new ArrayList<>();
+    public ArrayList<BgrAssets> asets = new ArrayList<>();
     private GameMap gameMap;
     private MouseInput mouseInput;
     private KeyInput keychecker;
@@ -41,8 +43,9 @@ public class GamePanel extends JPanel implements Runnable {
         addMouseMotionListener(mouseInput);
 
         gameMap = new GameMap(this);
-        gameMap.testMap();
+        gameMap.Map1();
         walls = gameMap.getWalls();
+        asets = gameMap.getAssets();
 
         Loader load = new Loader();
         BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
@@ -123,6 +126,9 @@ public class GamePanel extends JPanel implements Runnable {
         dummyEnemy.draw(gtd);
         for (Wall wall : walls) {
             wall.draw(gtd);
+        }
+        for (BgrAssets asets : asets) {
+            asets.draw(gtd);
         }
     }
 }
