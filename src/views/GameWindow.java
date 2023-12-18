@@ -33,8 +33,8 @@ public class GameWindow extends JFrame {
         gamePanel.requestFocusInWindow(); // Fokus pada GamePanel untuk input dari keyboard
     }
 
-    public void showRoomPanel(String roomCode) {
-        roomPanel = new RoomPanel(roomCode, this);
+    public void showRoomPanel(int mode) {
+        roomPanel = new RoomPanel(mode, this);
         add(roomPanel, "RoomPanel");
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(getContentPane(), "RoomPanel");

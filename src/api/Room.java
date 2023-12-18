@@ -1,6 +1,7 @@
 package api;
 
 import com.google.firebase.database.*;
+import data.Multiplayer;
 import views.GamePanel;
 import views.GameWindow;
 
@@ -22,11 +23,9 @@ public class Room {
     }
 
     private String roomCode;
-    private final HashMap<String, Integer> PlayerList = new HashMap<>();
     public boolean start = false;
 
     public Room() {
-        listenPlayerList();
     }
 
     public Room(String roomCode, String id, Integer status) {
@@ -42,19 +41,19 @@ public class Room {
     }
 
     public void addPlayer(String id, Integer status) {
-        PlayerList.put(id, status);
+        Multiplayer.PlayerList.put(id, status);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
         DatabaseReference positionRef = ref.child(this.roomCode);
         // add each player from playerlist to db
-        for (String player : PlayerList.keySet()) {
-            positionRef.child(player).setValueAsync(new Player(player, PlayerList.get(player)));
+        for (String player : Multiplayer.PlayerList.keySet()) {
+            positionRef.child(player).setValueAsync(new Player(player, Multiplayer.PlayerList.get(player)));
         }
     }
 
     public boolean isPlayerExist(String id) {
-        for (String player : PlayerList.keySet()) {
+        for (String player : Multiplayer.PlayerList.keySet()) {
             if (player.equals(id)) {
                 return true;
             }
@@ -69,7 +68,9 @@ public class Room {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot player : dataSnapshot.getChildren()) {
-                    PlayerList.put(player.getKey(), player.getValue(Player.class).status);
+                    System.out.println(player.getKey());
+                    System.out.println(player.getValue(Player.class).status);
+                    Multiplayer.PlayerList.put(player.getKey(), player.getValue(Player.class).status);
                 }
             }
 
@@ -82,11 +83,11 @@ public class Room {
     }
 
     public HashMap<String, Integer> getPlayerList() {
-        return PlayerList;
+        return Multiplayer.PlayerList;
     }
 
     public boolean isEmpty() {
-        return PlayerList.isEmpty();
+        return Multiplayer.PlayerList.isEmpty();
     }
 
     public void setStart(boolean start) {
