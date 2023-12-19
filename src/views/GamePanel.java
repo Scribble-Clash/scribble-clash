@@ -38,11 +38,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void initComponents() {
-        player = new PlayerMaker().createPlayer(500, 900, this);
+        player = new PlayerMaker().createPlayer(120, 400, this);
 
         for (String id : Multiplayer.PlayerList.keySet()) {
             if (id != Multiplayer.id) {
-                otherPlayer.add(new PlayerMaker().addPlayer(500, 900, this, id));
+                otherPlayer.add(new PlayerMaker().addPlayer(1630, 400, this, id));
             }
         }
         keychecker = new KeyInput(player);

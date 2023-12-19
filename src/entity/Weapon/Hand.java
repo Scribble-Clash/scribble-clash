@@ -18,13 +18,14 @@ public class Hand extends Weapon {
     private int orientation;
     private Weapon heldWeapon;
     private BufferedImage[] animation;
+    public String userId;
     private int totalFrames;
     private boolean isAttacking = false;
     private int dashDistance = 20;
     Animated animated = new Animated();
     private AnimationManager animationManager;
 
-    public Hand(int x, int y, Image img, GamePanel panel) {
+    public Hand(int x, int y, Image img, String userId, GamePanel panel) {
         super(x, y);
         this.handImage = img;
         this.panel = panel;
@@ -68,8 +69,26 @@ public class Hand extends Weapon {
         return dashDistance;
     }
 
+    // setter and getter
     private DummyEnemy getDummyEnemyReference() {
-        return this.getPanel().getDummyEnemy();
+        DummyEnemy dummyEnemy = this.getPanel().getDummyEnemy();
+        if (dummyEnemy == null) {
+            System.out.println("Tidak ada musuh di sekitar");
+            return null;
+        }
+        return dummyEnemy;
+    }
+
+    private Object getPlayerReference() {
+        if (!data.Players.getPlayerdata(0).getId().equals(this.userId)) {
+            return this.getPanel().getPlayer();
+        } else if (this.getPanel().getDummyEnemy() != null) {
+            return this.getPanel().getDummyEnemy();
+        } else {
+            System.out.println("Tidak Ada Dummy Atau Player Disekitar");
+            return null;
+        }
+        // return null;
     }
 
     // override method
@@ -107,6 +126,18 @@ public class Hand extends Weapon {
     }
 
     @Override
+    public void hit(Player enemy, int damage) {
+        Rectangle handRect = new Rectangle(x, y, handImage.getWidth(null), handImage.getHeight(null));
+        Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+
+        if (handRect.intersects(enemyRect) && isAttacking) {
+            boolean knockFromRight = panel.getPlayer().getX() > enemy.getX();
+            enemy.takeDamage(damage, knockFromRight);
+            isAttacking = false;
+        }
+    }
+
+    @Override
     public void attack() {
         this.animation = animated.handfightanimation();
         totalFrames = animation.length;
@@ -114,7 +145,7 @@ public class Hand extends Weapon {
         boolean isFacingLeft = panel.getPlayer().isFacingLeft();
         if (isFacingLeft) {
             for (int i = 1; i < totalFrames; i++) {
-                animation[i] = animated.flipImageVertically(animation[i]);
+                animation[i] = animated.flipImageHorizontally(animation[i]);
             }
             isFacingLeft = false;
         }
@@ -125,13 +156,12 @@ public class Hand extends Weapon {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                handImage = animation[i];
+                this.img = animation[i];
                 panel.repaint();
             }
-            hit(getDummyEnemyReference(), 1);
-            handImage = animation[0];
+            this.img = animation[0];
+            attackReference(getPlayerReference(), 1); // Use attackReference method here
             isAttacking = false;
-            // resetHitbox();
         });
         animationThread.start();
     }
@@ -153,19 +183,26 @@ public class Hand extends Weapon {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                handImage = animation[i];
-                panel.repaint();
-
-                hit(getDummyEnemyReference(), 10);
+                img = animation[i];
+                attackReference(getPlayerReference(), 10); // Use attackReference method here
             }
-            handImage = animation[0];
-
+            img = animation[0];
             isAttacking = false;
             resetHitbox();
             panel.repaint();
         });
 
         animationThread.start();
+    }
+
+    public void attackReference(Object enemy, int damage) {
+        if (enemy instanceof DummyEnemy) {
+            hit((DummyEnemy) enemy, damage);
+        } else if (enemy instanceof Player) {
+            hit((Player) enemy, damage);
+        } else {
+            // throw an exception or do nothing
+        }
     }
 
     // other method
@@ -182,17 +219,5 @@ public class Hand extends Weapon {
         if (!animationManager.isAnimating()) {
             animationManager.charge1();
         }
-    }
-
-    public void charge2() {
-        if (!animationManager.isAnimating()) {
-            animationManager.charge2();
-        }
-    }
-
-    @Override
-    public void hit(Player enemy, int damage) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'hit'");
     }
 }
