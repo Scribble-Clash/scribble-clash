@@ -29,11 +29,11 @@ public class PlayerMaker {
         return player;
     }
 
-    public Player addPlayer(int x, int y, GamePanel panel, String id) {
+    public Player addPlayer(int x, int y, GamePanel panel, int numbers) {
         // UUID uuid = UUID.randomUUID();
         // String id = uuid.toString();
-        Player player = new Player(x, y, 1, panel, Multiplayer.roomCode, id);
-        PlayerAPI playerAPI = new PlayerAPI(Multiplayer.roomCode, id);
+        Player player = new Player(x, y, 1, panel, Multiplayer.roomCode, "player" + numbers);
+        PlayerAPI playerAPI = new PlayerAPI(Multiplayer.roomCode, "players" + numbers);
         playerAPI.listenPlayerData(player);
         data.Players.addData(playerAPI);
         data.Players.addPlayerdata(player);

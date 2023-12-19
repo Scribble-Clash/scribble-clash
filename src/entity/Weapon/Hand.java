@@ -128,8 +128,8 @@ public class Hand extends Weapon {
                 handImage = animation[i];
                 panel.repaint();
             }
-            hit(getDummyEnemyReference(), 1);
             handImage = animation[0];
+            hit(getDummyEnemyReference(), 1);
             isAttacking = false;
             // resetHitbox();
         });
@@ -159,7 +159,6 @@ public class Hand extends Weapon {
                 hit(getDummyEnemyReference(), 10);
             }
             handImage = animation[0];
-
             isAttacking = false;
             resetHitbox();
             panel.repaint();
@@ -181,12 +180,6 @@ public class Hand extends Weapon {
     public void charge1() {
         if (!animationManager.isAnimating()) {
             animationManager.charge1();
-        }
-    }
-
-    public void charge2() {
-        if (!animationManager.isAnimating()) {
-            animationManager.charge2();
         }
     }
 

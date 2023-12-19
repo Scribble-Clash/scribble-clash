@@ -98,8 +98,8 @@ public class Sword extends Weapon {
                 this.img = animation[i];
                 panel.repaint();
             }
-            hit(getPlayerReference(), 1);
             this.img = animation[0];
+            hit(getPlayerReference(), 1);
             isAttacking = false;
         });
         animationThread.start();
@@ -123,10 +123,9 @@ public class Sword extends Weapon {
                     e.printStackTrace();
                 }
                 img = animation[i];
-                hit(getDummyEnemyReference(), 10);
+                hit(getPlayerReference(), 10);
             }
             img = animation[0];
-
             isAttacking = false;
             resetHitbox();
             panel.repaint();
@@ -143,12 +142,6 @@ public class Sword extends Weapon {
     public void charge1() {
         if (!animationManager.isAnimating()) {
             animationManager.charge1();
-        }
-    }
-
-    public void charge2() {
-        if (!animationManager.isAnimating()) {
-            animationManager.charge2();
         }
     }
 

@@ -254,7 +254,7 @@ public class Player extends Entity {
         // Logika lompatan saat di atas tanah
         if (onGround) {
             if (keyUp) {
-                yspeed = -6;
+                yspeed = -7;
             } else {
                 yspeed = 0;
             }
@@ -341,10 +341,10 @@ public class Player extends Entity {
         hand.draw(gtd);
     }
 
-// other method
+    // other method
 
     private void respawnPlayer() {
-        x = startingX + (int) (Math.random() * (1300 - 500) - 100);
+        x = startingX + (int) (Math.random() * (1300 - 500) - 300);
         y = startingY - 500;
         setHealth(100);
     }

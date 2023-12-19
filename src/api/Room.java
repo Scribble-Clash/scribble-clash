@@ -4,7 +4,6 @@ import com.google.firebase.database.*;
 import data.Multiplayer;
 import views.GamePanel;
 import views.GameWindow;
-import views.RoomPanel;
 
 import java.util.HashMap;
 
@@ -24,7 +23,7 @@ public class Room {
     }
 
     private String roomCode;
-    private boolean start = false;
+    public boolean start = false;
 
     public Room() {
     }
@@ -69,9 +68,10 @@ public class Room {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot player : dataSnapshot.getChildren()) {
+                    System.out.println(player.getKey());
+                    System.out.println(player.getValue(Player.class).status);
                     Multiplayer.PlayerList.put(player.getKey(), player.getValue(Player.class).status);
                 }
-                RoomPanel.updatePlayerList();
             }
 
             @Override
@@ -106,6 +106,7 @@ public class Room {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 start = dataSnapshot.getValue(Boolean.class);
+                System.out.println(start);
                 if (start) {
                     gameWindow.showGamePanel(false);
                 }

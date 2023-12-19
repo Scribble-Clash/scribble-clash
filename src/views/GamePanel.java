@@ -11,8 +11,8 @@ import controller.KeyInput;
 import controller.Loader;
 import controller.MouseInput;
 import controller.PlayerMaker;
-import entity.BgrAssets;
 import data.Multiplayer;
+import entity.BgrAssets;
 import entity.DummyEnemy;
 import entity.Player;
 import entity.Wall;
@@ -27,8 +27,6 @@ public class GamePanel extends JPanel implements Runnable {
     private MouseInput mouseInput;
     private KeyInput keychecker;
     private DummyEnemy dummyEnemy;
-    private JLabel healthLabel;
-    private boolean isPaused = false;
     private volatile boolean running = true;
     private boolean isDemo;
 
@@ -38,12 +36,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void initComponents() {
-        player = new PlayerMaker().createPlayer(500, 900, this);
+        player = new PlayerMaker().createPlayer(120, 400, this);
 
-        for (String id : Multiplayer.PlayerList.keySet()) {
-            if (id != Multiplayer.id) {
-                otherPlayer.add(new PlayerMaker().addPlayer(500, 900, this, id));
-            }
+        for (int i = 2; i <= Multiplayer.numberOfPlayers; i++) {
+            otherPlayer.add(new PlayerMaker().addPlayer(1630, 400, this, i));
         }
         keychecker = new KeyInput(player);
         addKeyListener(keychecker);
@@ -53,18 +49,14 @@ public class GamePanel extends JPanel implements Runnable {
         addMouseMotionListener(mouseInput);
 
         gameMap = new GameMap(this);
+
         gameMap.Map1();
         walls = gameMap.getWalls();
         asets = gameMap.getAssets();
-
         Loader load = new Loader();
         if (isDemo) {
             BufferedImage dummyEnemyImage = (BufferedImage) load.mainimage();
             dummyEnemy = new DummyEnemy(900, 700, dummyEnemyImage.getSubimage(576, 128, 64, 64), this);
-
-            healthLabel = new JLabel("Health: " + dummyEnemy.getHealth());
-            healthLabel.setForeground(Color.RED);
-            add(healthLabel);
         }
         gameThread = new Thread(this);
         gameThread.start();
