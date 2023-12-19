@@ -31,19 +31,28 @@ public class Sword extends Weapon {
         this.hitbox = new Rectangle(x, y, this.img.getWidth(this.getPanel()), this.img.getHeight(this.getPanel()));
         this.damage = damage;
         this.animationManager = new AnimationManager(panel);
-
     }
 
     // setter and getter
     private DummyEnemy getDummyEnemyReference() {
-        return this.getPanel().getDummyEnemy();
+        DummyEnemy dummyEnemy = this.getPanel().getDummyEnemy();
+        if (dummyEnemy == null) {
+            System.out.println("Tidak ada musuh di sekitar");
+            return null;
+        }
+        return dummyEnemy;
     }
 
-    private Player getPlayerReference() {
+    private Object getPlayerReference() {
         if (!data.Players.getPlayerdata(0).getId().equals(this.userId)) {
             return this.getPanel().getPlayer();
+        } else if (this.getPanel().getDummyEnemy() != null) {
+            return this.getPanel().getDummyEnemy();
+        } else {
+            System.out.println("Tidak Ada Dummy Atau Player Disekitar");
+            return null;
         }
-        return null;
+        // return null;
     }
 
     public int getDamage() {
@@ -99,7 +108,7 @@ public class Sword extends Weapon {
                 panel.repaint();
             }
             this.img = animation[0];
-            hit(getPlayerReference(), 1);
+            attackReference(getPlayerReference(), 1); // Use attackReference method here
             isAttacking = false;
         });
         animationThread.start();
@@ -123,7 +132,7 @@ public class Sword extends Weapon {
                     e.printStackTrace();
                 }
                 img = animation[i];
-                hit(getPlayerReference(), 10);
+                attackReference(getPlayerReference(), 10); // Use attackReference method here
             }
             img = animation[0];
             isAttacking = false;
@@ -132,6 +141,16 @@ public class Sword extends Weapon {
         });
 
         animationThread.start();
+    }
+
+    public void attackReference(Object enemy, int damage) {
+        if (enemy instanceof DummyEnemy) {
+            hit((DummyEnemy) enemy, damage);
+        } else if (enemy instanceof Player) {
+            hit((Player) enemy, damage);
+        } else {
+            // throw an exception or do nothing
+        }
     }
 
     // other method

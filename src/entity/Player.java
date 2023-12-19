@@ -48,7 +48,7 @@ public class Player extends Entity {
         switch (colorId) {
             case 1:
                 this.img = sprites.getSubimage(576, 448, 64, 64);
-                this.hand = new Hand(x + width, y + height, sprites.getSubimage(640, 0, 64, 64), this.panel);
+                this.hand = new Hand(x + width, y + height, sprites.getSubimage(640, 0, 64, 64), this.id, this.panel);
             case 2:
         }
 
