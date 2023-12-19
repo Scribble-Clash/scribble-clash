@@ -24,6 +24,7 @@ public class PlayerAPI {
         this.roomCode = roomCode;
         this.id = id;
         setHealth(100);
+        setSpawn();
 //        listenPos();
     }
 
@@ -178,6 +179,33 @@ public class PlayerAPI {
         this.hit = hit;
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
+
+        DatabaseReference positionRef = ref.child(roomCode).child(id);
+        positionRef.setValueAsync(this);
+    }
+
+    public void setSpawn() {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference();
+
+        switch (this.id) {
+            case "player1":
+                this.posX = 125;
+                this.posY = 456;
+                break;
+            case "player2":
+                this.posX = 1780;
+                this.posY = 456;
+                break;
+            case "player3":
+                this.posX = 160;
+                this.posY = 896;
+                break;
+            case "player4":
+                this.posX = 1720;
+                this.posY = 896;
+                break;
+        }
 
         DatabaseReference positionRef = ref.child(roomCode).child(id);
         positionRef.setValueAsync(this);
