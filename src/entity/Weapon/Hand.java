@@ -160,7 +160,7 @@ public class Hand extends Weapon {
                 panel.repaint();
             }
             this.img = animation[0];
-            attackReference(getPlayerReference(), 1); // Use attackReference method here
+            attackReference(getPlayerReference(), 5); // Use attackReference method here
             isAttacking = false;
         });
         animationThread.start();
@@ -184,7 +184,7 @@ public class Hand extends Weapon {
                     e.printStackTrace();
                 }
                 img = animation[i];
-                attackReference(getPlayerReference(), 10); // Use attackReference method here
+                attackReference(getPlayerReference(), 20); // Use attackReference method here
             }
             img = animation[0];
             isAttacking = false;
