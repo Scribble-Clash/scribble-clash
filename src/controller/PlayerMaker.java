@@ -32,6 +32,24 @@ public class PlayerMaker {
     public Player addPlayer(int x, int y, GamePanel panel, String id) {
         // UUID uuid = UUID.randomUUID();
         // String id = uuid.toString();
+        switch (id) {
+            case "player1":
+                x = 125;
+                y = 456;
+                break;
+            case "player2":
+                x = 1780;
+                y = 456;
+                break;
+            case "player3":
+                x = 160;
+                y = 896;
+                break;
+            case "player4":
+                x = 1720;
+                y = 896;
+                break;
+        }
         Player player = new Player(x, y, 1, panel, Multiplayer.roomCode, id);
         PlayerAPI playerAPI = new PlayerAPI(Multiplayer.roomCode, id);
         playerAPI.listenPlayerData(player);
